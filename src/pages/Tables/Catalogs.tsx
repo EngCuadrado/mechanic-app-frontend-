@@ -13,6 +13,7 @@ import ActiveIngredients from "../../components/ui/catalogs/ActiveIngredients";
 import AdministrationRoutes from "../../components/ui/catalogs/AdministrationRoutes";
 import SupplierTypes from "../../components/ui/catalogs/SupplierTypes";
 import Suppliers from "../../components/ui/catalogs/Suppliers";
+import Mechanics from "../../components/ui/catalogs/Mechanics";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -52,11 +53,10 @@ export default function Catalogs() {
 		setValue(newValue);
 	};
 
-	// Definición de los datos
 	const items = [
 		{
 			label: <FormattedMessage id="brands" values={{ count: 2 }} />,
-			content: <Brands />,
+			content: <Mechanics />,
 		},
 		{
 			label: <FormattedMessage id="categories" values={{ count: 2 }} />,

@@ -72,6 +72,10 @@ export default function App() {
 									path="/products"
 									element={<Products />}
 								/>
+								<Route
+									path="/catalogs"
+									element={<Catalogs />}
+								/>
 
 								{/* RUTAS SOLO PARA ROL 1 (ADMIN) */}
 								<Route
@@ -94,10 +98,6 @@ export default function App() {
 									<Route
 										path="/reportes"
 										element={<Reportes />}
-									/>
-									<Route
-										path="/catalogs"
-										element={<Catalogs />}
 									/>
 
 									{/* Tables & UI Elements (Asumiendo que son admin o para desarrollo) */}

@@ -102,25 +102,23 @@ export default function Medicines() {
 
 	return (
 		<div className="flex-1">
-			{user?.roleId !== 2 && (
-				<div id="tour-actions" className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2 mb-4">
-					<button
-						onClick={startTour}
-						className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/[0.03] transition-colors flex items-center gap-2 cursor-pointer"
-					>
-						<QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-						Guía rápida
-					</button>
-					<MedicineExportButton />    
-					<button
-						onClick={() => setShowDrawer(true)}
-						className="px-4 py-2 text-white rounded-xl transition-colors flex items-center gap-2 bg-brand-500 cursor-pointer"
-					>
-						<PlusCircleIcon className="h-5 w-5" />
-						<FormattedMessage id="medicine.add" />
-					</button>
-				</div>
-			)}
+			<div id="tour-actions" className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2 mb-4">
+				<button
+					onClick={startTour}
+					className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/[0.03] transition-colors flex items-center gap-2 cursor-pointer"
+				>
+					<QuestionMarkCircleIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+					Guía rápida
+				</button>
+				<MedicineExportButton />    
+				<button
+					onClick={() => setShowDrawer(true)}
+					className="px-4 py-2 text-white rounded-xl transition-colors flex items-center gap-2 bg-brand-500 cursor-pointer"
+				>
+					<PlusCircleIcon className="h-5 w-5" />
+					<FormattedMessage id="medicine.add" />
+				</button>
+			</div>
 
 			<MedicineTable />
 

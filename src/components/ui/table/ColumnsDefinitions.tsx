@@ -759,3 +759,54 @@ export const useSaleColumns = () => {
 	);
 	return columns;
 };
+
+
+export const useMechanicColumns = () => {
+	const intl = useIntl();
+	const columns = useMemo<ColumnDef<any>[]>(
+		() => [
+			{
+				header: intl.formatMessage({ id: "name" }),
+				id: "firstName",
+				cell: ({ row }) => (
+					<div className="flex items-center gap-4">
+						<span className="text-base font-semibold text-gray-800 dark:text-gray-100">
+							{row.original.firstName} {row.original.lastName}
+						</span>
+					</div>
+				),
+			},
+			{
+				header: "Especialidad",
+				id: "specialty",
+				cell: ({ row }) => (
+					<div className="flex flex-col gap-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+						{row.original.specialty && (
+							<div className="flex items-center gap-2">
+								<span
+									className="truncate max-w-[180px]"
+								>
+									{row.original.specialty.name}
+								</span>
+							</div>
+						)}
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "statuses" }),
+				accessorKey: "isActive",
+				cell: ({ getValue }) => (
+					<Status status={getValue() ? true : false} />
+				),
+			},
+			{
+				id: "actions",
+				cell: ({ row }) => <BrandCellActions row={row} />,
+			},
+		],
+		[intl],
+	);
+
+	return columns;
+};

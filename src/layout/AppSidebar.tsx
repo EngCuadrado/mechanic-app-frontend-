@@ -35,25 +35,25 @@ const AppSidebar: React.FC = () => {
 				icon: <GridIcon />,
 				name: intl.formatMessage({ id: "layout.sidebar.dashboard" }),
 				path: "/calendar",
-				roles: [1, 2],
+				// roles: [1, 2],
 			},
 			{
 				icon: <ShoppingCartIcon />,
 				name: intl.formatMessage({ id: "sales" }, { count: 2 }),
 				path: "/sales",
-				roles: [1, 2],
+				// roles: [1, 2],
 			},
 			{
 				icon: <ReceiptPercentIcon />,
 				name: intl.formatMessage({ id: "transactions" }, { count: 2 }),
 				path: "/transactions",
-				roles: [1, 2],
+				// roles: [1, 2],
 			},
 			{
 				icon: <AiOutlineMedicineBox />,
 				name: intl.formatMessage({ id: "products" }, { count: 2 }),
 				path: "/products",
-				roles: [1, 2],
+				// roles: [1, 2],
 			},
 			// {
 			//     icon: <ClipboardDocumentListIcon className="size-6" />,
@@ -77,13 +77,11 @@ const AppSidebar: React.FC = () => {
 				icon: <FolderOpenIcon />,
 				name: intl.formatMessage({ id: "catalogs" }, { count: 2 }),
 				path: "/catalogs",
-				roles: [1],
+				// roles: [1],
 			},
 		];
 
-		return items.filter(
-			(item) => !item.roles || (user && item.roles.includes(user.roleId)),
-		);
+		return items;
 	}, [intl, user]);
 
 	const othersItems: NavItem[] = [];

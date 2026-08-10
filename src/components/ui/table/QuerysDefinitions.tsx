@@ -502,3 +502,23 @@ export const GET_EMPLOYEE_BY_ID = () => gql`
 		}
 	}
 `;
+
+export const GET_MECHANICS_QUERY = () => gql`
+query {
+	mechanics {
+	nodes {
+		mechanicId
+		firstName
+		lastName
+		isActive
+		specialty {
+			specialtyId
+			name
+		}
+	}
+	pageInfo {
+		hasNextPage
+	}
+	}
+}
+`;

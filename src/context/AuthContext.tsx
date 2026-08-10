@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 				// 'https://localhost:44361/api/Auth/login',
 				baseUrl + "api/Auth/login",
 				{
-					user: username,
+					email: username,
 					password: password,
 				},
 			);

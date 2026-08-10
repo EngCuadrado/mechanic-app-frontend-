@@ -71,7 +71,7 @@ export default function UserDropdown() {
 							</div>
 						</DropdownItem>
 					</li>
-					{user.user?.roleId === 1 && (
+					{user?.user?.roleName === "superadmin" && (
 						<li>
 							<DropdownItem
 								onItemClick={closeDropdown}
