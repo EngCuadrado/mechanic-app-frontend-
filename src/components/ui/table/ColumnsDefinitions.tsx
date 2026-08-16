@@ -16,6 +16,7 @@ import { AdministrationRouteCellActions } from "./CustomCells/AdministrationRout
 import { SupplierTypeCellActions } from "./CustomCells/SupplierTypeCellActions";
 import { SupplierCellActions } from "./CustomCells/SupplierCellActions";
 import { BatchCellActions } from "./CustomCells/BatchCellActions";
+import { MechanicCellActions } from "./CustomCells/MechanicCellActions";
 import MedicineClasification from "./CustomCells/MedicineClasification";
 import { EmployeeCellActions } from "../table/CustomCells/EmployeeCellActions";
 import MedicineActiveIngredients from "./CustomCells/MedicineActiveIngredients";
@@ -802,7 +803,7 @@ export const useMechanicColumns = () => {
 			},
 			{
 				id: "actions",
-				cell: ({ row }) => <BrandCellActions row={row} />,
+				cell: ({ row }) => <MechanicCellActions row={row} />,
 			},
 		],
 		[intl],

@@ -522,3 +522,75 @@ query {
 	}
 }
 `;
+
+export const ADD_MECHANIC_MUTATION = gql`
+	mutation AddMechanic($firstName: String!, $lastName: String!, $specialtyId: Int!) {
+		addMechanic(firstName: $firstName, lastName: $lastName, specialtyId: $specialtyId) {
+			mechanicId
+			firstName
+			lastName
+			isActive
+			specialty {
+				name
+			}
+		}
+	}
+`;
+
+export const GET_MECHANIC_SPECIALTIES_QUERY = () => gql`
+	query GetMechanicSpecialties {
+		mechanicSpecialties {
+			nodes {
+				specialtyId
+				name
+			}
+		}
+	}
+`;
+
+export const UPDATE_MECHANIC_MUTATION = gql`
+	mutation UpdateMechanic($mechanicId: Int!, $firstName: String!, $lastName: String!, $specialtyId: Int!) {
+		updateMechanic(mechanicId: $mechanicId, firstName: $firstName, lastName: $lastName, specialtyId: $specialtyId) {
+			mechanicId
+			firstName
+			lastName
+			specialty {
+				name
+			}
+		}
+	}
+`;
+
+export const TOGGLE_MECHANIC_STATUS_MUTATION = gql`
+	mutation ToggleMechanicStatus($mechanicId: Int!) {
+		toggleMechanicStatus(mechanicId: $mechanicId) {
+			mechanicId
+			firstName
+			isActive
+		}
+	}
+`;
+
+export const ADD_MECHANIC_SPECIALTY_MUTATION = gql`
+	mutation AddMechanicSpecialty($name: String!) {
+		addMechanicSpecialty(name: $name) {
+			specialtyId
+			name
+		}
+	}
+`;
+
+export const UPDATE_MECHANIC_SPECIALTY_MUTATION = gql`
+	mutation UpdateMechanicSpecialty($specialtyId: Int!, $newName: String!) {
+		updateMechanicSpecialty(specialtyId: $specialtyId, newName: $newName) {
+			specialtyId
+			name
+		}
+	}
+`;
+
+export const DELETE_MECHANIC_SPECIALTY_MUTATION = gql`
+	mutation DeleteMechanicSpecialty($specialtyId: Int!) {
+		deleteMechanicSpecialty(specialtyId: $specialtyId)
+	}
+`;

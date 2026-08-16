@@ -55,43 +55,9 @@ export default function Catalogs() {
 
 	const items = [
 		{
-			label: <FormattedMessage id="brands" values={{ count: 2 }} />,
+			label: <FormattedMessage id="mechanics" values={{ count: 2 }} />,
 			content: <Mechanics />,
 		},
-		{
-			label: <FormattedMessage id="categories" values={{ count: 2 }} />,
-			content: <Categories />,
-		},
-		{
-			label: (
-				<FormattedMessage
-					id="active_ingredients"
-					values={{ count: 1 }}
-				/>
-			),
-			content: <ActiveIngredients />,
-		},
-		{
-			label: (
-				<FormattedMessage
-					id="administration_routes"
-					values={{ count: 1 }}
-				/>
-			),
-			content: <AdministrationRoutes />,
-		},
-		{
-			label: (
-				<FormattedMessage id="supplier_types" values={{ count: 1 }} />
-			),
-			content: <SupplierTypes />,
-		},
-		{
-			label: <FormattedMessage id="suppliers" values={{ count: 1 }} />,
-			content: <Suppliers />,
-		},
-		// { label: 'Ventas', content: <Sales /> }
-		// { label: <FormattedMessage id="medicines" values={{ count: 1 }}/>, content: <Medicines /> },
 	];
 
 	return (

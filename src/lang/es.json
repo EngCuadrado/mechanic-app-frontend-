@@ -145,6 +145,7 @@
     "logout": "Cerrar sesión",
     "manual": "Manual",
     "manufacturers": "{count, plural, one {Laboratorio} other {Laboratorios}}",
+    "mechanics": "{count, plural, one {Mecánico} other {Mecánicos}}",
     "medicine.action.add_another": "Añadir otro producto",
     "medicine.action.add_ingredient": "+ Agregar otro componente",
     "medicine.add": "Agregar medicina",
