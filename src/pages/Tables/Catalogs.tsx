@@ -14,6 +14,7 @@ import AdministrationRoutes from "../../components/ui/catalogs/AdministrationRou
 import SupplierTypes from "../../components/ui/catalogs/SupplierTypes";
 import Suppliers from "../../components/ui/catalogs/Suppliers";
 import Mechanics from "../../components/ui/catalogs/Mechanics";
+import Companies from "../../components/ui/catalogs/Companies";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -54,6 +55,10 @@ export default function Catalogs() {
 	};
 
 	const items = [
+		{
+			label: <FormattedMessage id="company" values={{ count: 2 }} />,
+			content: <Companies />,
+		},
 		{
 			label: <FormattedMessage id="mechanics" values={{ count: 2 }} />,
 			content: <Mechanics />,

@@ -78,6 +78,7 @@
     "category.update.success": "Categoría actualizada con éxito",
     "clasification": "Clasificación",
     "code": "código",
+    "company": "{count, plural, one {Empresa} other {Empresas}}",
     "common.back": "Atrás",
     "common.back_to_home": "Volver a la página de inicio",
     "common.error_title": "ERROR",

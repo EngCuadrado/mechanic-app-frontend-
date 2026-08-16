@@ -17,6 +17,7 @@ import { SupplierTypeCellActions } from "./CustomCells/SupplierTypeCellActions";
 import { SupplierCellActions } from "./CustomCells/SupplierCellActions";
 import { BatchCellActions } from "./CustomCells/BatchCellActions";
 import { MechanicCellActions } from "./CustomCells/MechanicCellActions";
+import { CompanyCellActions } from "./CustomCells/CompanyCellActions";
 import MedicineClasification from "./CustomCells/MedicineClasification";
 import { EmployeeCellActions } from "../table/CustomCells/EmployeeCellActions";
 import MedicineActiveIngredients from "./CustomCells/MedicineActiveIngredients";
@@ -804,6 +805,90 @@ export const useMechanicColumns = () => {
 			{
 				id: "actions",
 				cell: ({ row }) => <MechanicCellActions row={row} />,
+			},
+		],
+		[intl],
+	);
+
+	return columns;
+};
+
+export const useCompanyColumns = () => {
+	const intl = useIntl();
+	const columns = useMemo<ColumnDef<any>[]>(
+		() => [
+			{
+				header: intl.formatMessage({ id: "company.info", defaultMessage: "Empresa" }),
+				id: "company",
+				cell: ({ row }) => (
+					<div className="flex flex-col">
+						<span className="text-base font-semibold text-gray-800 dark:text-gray-100">
+							{row.original.name}
+						</span>
+						{row.original.taxId && (
+							<span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1 font-medium">
+								<IdentificationIcon className="size-3.5" />
+								{row.original.taxId}
+							</span>
+						)}
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "contact", defaultMessage: "Contacto" }),
+				id: "contact",
+				cell: ({ row }) => (
+					<div className="flex flex-col gap-1">
+						{row.original.contactPhone && (
+							<div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
+								<PhoneIcon className="size-4 text-gray-400" />
+								{row.original.contactPhone}
+							</div>
+						)}
+						{row.original.contactEmail && (
+							<div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+								<EnvelopeIcon className="size-3.5 text-gray-400" />
+								<span className="truncate max-w-[150px]" title={row.original.contactEmail}>
+									{row.original.contactEmail}
+								</span>
+							</div>
+						)}
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "details", defaultMessage: "Detalles" }),
+				id: "details",
+				cell: ({ row }) => (
+					<div className="flex flex-col gap-1.5">
+						{row.original.billingAddress && (
+							<div className="flex items-start gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+								<MapPinIcon className="size-4 shrink-0 mt-0.5 text-gray-400" />
+								<span className="line-clamp-2 max-w-[200px]" title={row.original.billingAddress}>
+									{row.original.billingAddress}
+								</span>
+							</div>
+						)}
+						{row.original.defaultCurrency && (
+							<div className="flex items-center">
+								<span className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 ring-1 ring-inset ring-gray-500/10 uppercase">
+									{row.original.defaultCurrency}
+								</span>
+							</div>
+						)}
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "status", defaultMessage: "Estado" }),
+				accessorKey: "isActive",
+				cell: ({ getValue }) => (
+					<Status status={getValue() ? true : false} />
+				),
+			},
+			{
+				id: "actions",
+				cell: ({ row }) => <CompanyCellActions row={row} />,
 			},
 		],
 		[intl],

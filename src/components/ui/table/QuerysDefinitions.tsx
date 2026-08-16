@@ -594,3 +594,90 @@ export const DELETE_MECHANIC_SPECIALTY_MUTATION = gql`
 		deleteMechanicSpecialty(specialtyId: $specialtyId)
 	}
 `;
+
+export const GET_COMPANIES_QUERY = () => gql`
+	query {
+		companies {
+			nodes {
+				companyId
+				name
+				taxId
+				billingAddress
+				contactEmail
+				contactPhone
+				defaultCurrency
+				isActive
+			}
+			pageInfo {
+				hasNextPage
+				hasPreviousPage
+			}
+		}
+	}
+`;
+
+export const ADD_COMPANY_MUTATION = gql`
+	mutation AddCompany(
+		$name: String!, 
+		$taxId: String!, 
+		$billingAddress: String!, 
+		$contactEmail: String!, 
+		$contactPhone: String!, 
+		$defaultCurrency: String!, 
+		$logoUrl: String!
+	) {
+		addCompany(
+			name: $name, 
+			taxId: $taxId, 
+			billingAddress: $billingAddress, 
+			contactEmail: $contactEmail, 
+			contactPhone: $contactPhone, 
+			defaultCurrency: $defaultCurrency, 
+			logoUrl: $logoUrl
+		) {
+			companyId
+			name
+			isActive
+		}
+	}
+`;
+
+export const UPDATE_COMPANY_MUTATION = gql`
+	mutation UpdateCompany(
+		$companyId: Int!,
+		$name: String!, 
+		$taxId: String!, 
+		$billingAddress: String!, 
+		$contactEmail: String!, 
+		$contactPhone: String!, 
+		$defaultCurrency: String!, 
+		$logoUrl: String!
+	) {
+		updateCompany(
+			companyId: $companyId,
+			name: $name, 
+			taxId: $taxId, 
+			billingAddress: $billingAddress, 
+			contactEmail: $contactEmail, 
+			contactPhone: $contactPhone, 
+			defaultCurrency: $defaultCurrency, 
+			logoUrl: $logoUrl
+		) {
+			companyId
+			name
+			billingAddress
+		}
+	}
+`;
+
+export const TOGGLE_COMPANY_STATUS_MUTATION = gql`
+	mutation ToggleCompanyStatus($companyId: Int!) {
+		toggleCompanyStatus(companyId: $companyId) {
+			companyId
+			name
+			isActive
+		}
+	}
+`;
+
+
