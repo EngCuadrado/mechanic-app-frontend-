@@ -680,4 +680,61 @@ export const TOGGLE_COMPANY_STATUS_MUTATION = gql`
 	}
 `;
 
+export const GET_INVENTORY_PARTS_QUERY = () => gql`
+	query GetInventoryParts(
+		$first: Int
+		$after: String
+		$order: [InventoryPartSortInput!]
+	) {
+		inventoryParts(first: $first, after: $after, order: $order) {
+			nodes {
+				inventoryPartId
+				imageUrl
+				name
+				stockQuantity
+				unitCost
+				taxCost
+				totalUnitCost
+				basePrice
+				currency
+				minStockAlert
+			}
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
+		}
+	}
+`;
 
+export const CREATE_INVENTORY_PART_MUTATION = gql`
+	mutation CreateInventoryPart(
+		$imageUrl: String
+		$name: String!
+		$stockQuantity: Int!
+		$unitCost: Float!
+		$taxCost: Float!
+		$totalUnitCost: Float!
+		$basePrice: Float!
+		$currency: String!
+		$minStockAlert: Int!
+	) {
+		addInventoryPart(
+			imageUrl: $imageUrl
+			name: $name
+			stockQuantity: $stockQuantity
+			unitCost: $unitCost
+			taxCost: $taxCost
+			totalUnitCost: $totalUnitCost
+			basePrice: $basePrice
+			currency: $currency
+			minStockAlert: $minStockAlert
+		) {
+			inventoryPartId
+			name
+			imageUrl
+			stockQuantity
+			basePrice
+		}
+	}
+`;

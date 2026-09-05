@@ -32,6 +32,7 @@ import Ventas from "./pages/Ventas";
 import Empleados from "./pages/Empleados";
 import Reportes from "./pages/Reportes";
 import Sales from "./components/ui/catalogs/Sales";
+import Inventory from "./pages/Tables/Inventory";
 
 export default function App() {
 	const locale = "es-NI";
@@ -63,7 +64,7 @@ export default function App() {
 									path="/profile"
 									element={<UserProfiles />}
 								/>
-								<Route path="/sales" element={<Sale />} />
+								{/* <Route path="/sales" element={<Sale />} />
 								<Route
 									path="/transactions"
 									element={<Sales />}
@@ -71,7 +72,13 @@ export default function App() {
 								<Route
 									path="/products"
 									element={<Products />}
+								/> */}
+
+								<Route
+									path="/inventory"
+									element={<Inventory />}
 								/>
+
 								<Route
 									path="/catalogs"
 									element={<Catalogs />}

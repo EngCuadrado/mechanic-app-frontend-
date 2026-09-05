@@ -896,3 +896,70 @@ export const useCompanyColumns = () => {
 
 	return columns;
 };
+
+export const useInventoryColumns = () => {
+	const intl = useIntl();
+
+	const columns = useMemo<ColumnDef<any>[]>(
+		() => [
+			{
+				header: "Image",
+				accessorKey: "imageUrl",
+				id: "imageUrl",
+				cell: ({ getValue }) => {
+					const url = getValue() as string;
+					return url ? (
+						<img src={url} alt="Inventory" className="w-10 h-10 object-cover rounded-md" />
+					) : (
+						<Avatar variant="rounded" sx={{ width: 40, height: 40 }}>
+							<FaBox />
+						</Avatar>
+					);
+				},
+			},
+			{
+				header: intl.formatMessage({ id: "name", defaultMessage: "Name" }),
+				accessorKey: "name",
+				id: "name",
+			},
+			{
+				header: intl.formatMessage({ id: "stock", defaultMessage: "Stock Quantity" }),
+				accessorKey: "stockQuantity",
+				id: "stockQuantity",
+			},
+			{
+				header: intl.formatMessage({ id: "unitCost", defaultMessage: "Unit Cost" }),
+				accessorKey: "unitCost",
+				id: "unitCost",
+			},
+			{
+				header: intl.formatMessage({ id: "taxCost", defaultMessage: "Tax Cost" }),
+				accessorKey: "taxCost",
+				id: "taxCost",
+			},
+			{
+				header: intl.formatMessage({ id: "totalUnitCost", defaultMessage: "Total Unit Cost" }),
+				accessorKey: "totalUnitCost",
+				id: "totalUnitCost",
+			},
+			{
+				header: intl.formatMessage({ id: "basePrice", defaultMessage: "Base Price" }),
+				accessorKey: "basePrice",
+				id: "basePrice",
+			},
+			{
+				header: intl.formatMessage({ id: "currency", defaultMessage: "Currency" }),
+				accessorKey: "currency",
+				id: "currency",
+			},
+			{
+				header: intl.formatMessage({ id: "minStockAlert", defaultMessage: "Min Stock Alert" }),
+				accessorKey: "minStockAlert",
+				id: "minStockAlert",
+			},
+		],
+		[intl],
+	);
+
+	return columns;
+};

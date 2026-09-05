@@ -4,11 +4,7 @@ import { AiOutlineMedicineBox } from "react-icons/ai";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import {
 	FolderOpenIcon,
-	ShoppingCartIcon,
-	ReceiptPercentIcon,
-	UserGroupIcon,
-	ChartBarIcon,
-	ClipboardDocumentListIcon,
+	ArchiveBoxIcon,
 } from "@heroicons/react/24/outline";
 
 import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
@@ -32,29 +28,34 @@ const AppSidebar: React.FC = () => {
 	const navItems: NavItem[] = useMemo(() => {
 		const items: NavItem[] = [
 			{
-				icon: <GridIcon />,
-				name: intl.formatMessage({ id: "layout.sidebar.dashboard" }),
-				path: "/calendar",
-				// roles: [1, 2],
+				icon: <ArchiveBoxIcon />,
+				name: intl.formatMessage({ id: "inventory" }),
+				path: "/inventory",
 			},
-			{
-				icon: <ShoppingCartIcon />,
-				name: intl.formatMessage({ id: "sales" }, { count: 2 }),
-				path: "/sales",
-				// roles: [1, 2],
-			},
-			{
-				icon: <ReceiptPercentIcon />,
-				name: intl.formatMessage({ id: "transactions" }, { count: 2 }),
-				path: "/transactions",
-				// roles: [1, 2],
-			},
-			{
-				icon: <AiOutlineMedicineBox />,
-				name: intl.formatMessage({ id: "products" }, { count: 2 }),
-				path: "/products",
-				// roles: [1, 2],
-			},
+			// {
+			// 	icon: <GridIcon />,
+			// 	name: intl.formatMessage({ id: "layout.sidebar.dashboard" }),
+			// 	path: "/calendar",
+			// 	// roles: [1, 2],
+			// },
+			// {
+			// 	icon: <ShoppingCartIcon />,
+			// 	name: intl.formatMessage({ id: "sales" }, { count: 2 }),
+			// 	path: "/sales",
+			// 	// roles: [1, 2],
+			// },
+			// {
+			// 	icon: <ReceiptPercentIcon />,
+			// 	name: intl.formatMessage({ id: "transactions" }, { count: 2 }),
+			// 	path: "/transactions",
+			// 	// roles: [1, 2],
+			// },
+			// {
+			// 	icon: <AiOutlineMedicineBox />,
+			// 	name: intl.formatMessage({ id: "products" }, { count: 2 }),
+			// 	path: "/products",
+			// 	// roles: [1, 2],
+			// },
 			// {
 			//     icon: <ClipboardDocumentListIcon className="size-6" />,
 			//     name: intl.formatMessage({ id: 'inventory' }),
