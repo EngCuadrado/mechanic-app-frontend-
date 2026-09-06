@@ -821,16 +821,33 @@ export const useCompanyColumns = () => {
 				header: intl.formatMessage({ id: "company.info", defaultMessage: "Empresa" }),
 				id: "company",
 				cell: ({ row }) => (
-					<div className="flex flex-col">
-						<span className="text-base font-semibold text-gray-800 dark:text-gray-100">
-							{row.original.name}
-						</span>
-						{row.original.taxId && (
-							<span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1 font-medium">
-								<IdentificationIcon className="size-3.5" />
-								{row.original.taxId}
-							</span>
+					<div className="flex items-center gap-4">
+						{row.original.logoUrl ? (
+							<div className="w-10 h-10 flex-shrink-0 bg-gray-50 dark:bg-dark-800 rounded-lg p-1 border border-gray-100 dark:border-dark-700">
+								<img
+									src={row.original.logoUrl}
+									alt={row.original.name}
+									className="w-full h-full object-contain"
+								/>
+							</div>
+						) : (
+							<div className="w-10 h-10 flex-shrink-0 bg-gray-100 dark:bg-dark-700 rounded-lg flex items-center justify-center border border-gray-200 dark:border-dark-600">
+								<span className="text-sm font-bold text-gray-400">
+									{row.original.name.charAt(0).toUpperCase()}
+								</span>
+							</div>
 						)}
+						<div className="flex flex-col">
+							<span className="text-base font-semibold text-gray-800 dark:text-gray-100">
+								{row.original.name}
+							</span>
+							{row.original.taxId && (
+								<span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-1 font-medium">
+									<IdentificationIcon className="size-3.5" />
+									{row.original.taxId}
+								</span>
+							)}
+						</div>
 					</div>
 				),
 			},

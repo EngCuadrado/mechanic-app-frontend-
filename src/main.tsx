@@ -2,7 +2,8 @@ import { Toaster } from "sonner";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ApolloProvider } from "@apollo/client/react";
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 
 import "./index.css";
 import "./utils/dateUtils";
@@ -13,12 +14,24 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { AppWrapper } from "./components/common/PageMeta.tsx";
 
+import { setContext } from "@apollo/client/link/context";
+
 const baseUrl = import.meta.env.VITE_BASE_API_URL;
 
+const authLink = setContext((_, { headers }) => {
+	return {
+		headers: {
+			...headers,
+			"apollo-require-preflight": "true",
+			"graphql-preflight": "1", // Para asegurar compatibilidad con HotChocolate
+		}
+	}
+});
+
+const uploadLink = new UploadHttpLink({ uri: baseUrl + "graphql/" });
+
 const client = new ApolloClient({
-	// link: new HttpLink({ uri: "http://localhost:5036/graphql/" }),
-	// link: new HttpLink({ uri: "https://localhost:44361/graphql/" }),
-	link: new HttpLink({ uri: baseUrl + "graphql/" }),
+	link: authLink.concat(uploadLink),
 
 	cache: new InMemoryCache(),
 });

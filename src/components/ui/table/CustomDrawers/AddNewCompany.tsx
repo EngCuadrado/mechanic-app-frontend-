@@ -19,7 +19,7 @@ export default function AddNewCompany({ onClose }: { onClose?: () => void }) {
 	const [contactEmail, setContactEmail] = useState("");
 	const [contactPhone, setContactPhone] = useState("");
 	const [defaultCurrency, setDefaultCurrency] = useState("USD");
-	const [logoUrl, setLogoUrl] = useState("");
+	const [logoFile, setLogoFile] = useState<File | null>(null);
 
 	const [mutateFunction, { loading }] = useMutation(ADD_COMPANY_MUTATION, {
 		refetchQueries: [{ query: GET_COMPANIES_QUERY() }],
@@ -40,7 +40,7 @@ export default function AddNewCompany({ onClose }: { onClose?: () => void }) {
 					contactEmail,
 					contactPhone,
 					defaultCurrency,
-					logoUrl: "", // forced to empty string per user request to send null
+					logoFile,
 				},
 			});
 
@@ -50,8 +50,8 @@ export default function AddNewCompany({ onClose }: { onClose?: () => void }) {
 			setBillingAddress("");
 			setContactEmail("");
 			setContactPhone("");
-			setDefaultCurrency("USD");
-			setLogoUrl("");
+			setDefaultCurrency("NIO");
+			setLogoFile(null);
 			
 			if (onClose) onClose();
 		} catch (err) {
@@ -189,8 +189,7 @@ export default function AddNewCompany({ onClose }: { onClose?: () => void }) {
 							id="logo_input"
 							accept="image/*"
 							onChange={(e) => {
-								// Por ahora no hacemos nada con el archivo, mandaremos "" al backend
-								console.log("Archivo seleccionado:", e.target.files?.[0]);
+								setLogoFile(e.target.files?.[0] || null);
 							}}
 							className="pl-[42px] file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-brand-900/30 dark:file:text-brand-400"
 						/>

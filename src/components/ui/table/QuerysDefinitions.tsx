@@ -606,6 +606,7 @@ export const GET_COMPANIES_QUERY = () => gql`
 				contactEmail
 				contactPhone
 				defaultCurrency
+				logoUrl
 				isActive
 			}
 			pageInfo {
@@ -618,54 +619,56 @@ export const GET_COMPANIES_QUERY = () => gql`
 
 export const ADD_COMPANY_MUTATION = gql`
 	mutation AddCompany(
-		$name: String!, 
-		$taxId: String!, 
-		$billingAddress: String!, 
-		$contactEmail: String!, 
-		$contactPhone: String!, 
-		$defaultCurrency: String!, 
-		$logoUrl: String!
+		$name: String!
+		$taxId: String!
+		$billingAddress: String!
+		$contactEmail: String!
+		$contactPhone: String!
+		$defaultCurrency: String!
+		$logoFile: Upload # El tipo Upload permite recibir el archivo binario
 	) {
 		addCompany(
-			name: $name, 
-			taxId: $taxId, 
-			billingAddress: $billingAddress, 
-			contactEmail: $contactEmail, 
-			contactPhone: $contactPhone, 
-			defaultCurrency: $defaultCurrency, 
-			logoUrl: $logoUrl
+			name: $name
+			taxId: $taxId
+			billingAddress: $billingAddress
+			contactEmail: $contactEmail
+			contactPhone: $contactPhone
+			defaultCurrency: $defaultCurrency
+			logoFile: $logoFile
 		) {
 			companyId
 			name
-			isActive
+			logoUrl # La URL de Azure Blob que se guardó
 		}
 	}
 `;
 
 export const UPDATE_COMPANY_MUTATION = gql`
 	mutation UpdateCompany(
-		$companyId: Int!,
-		$name: String!, 
-		$taxId: String!, 
-		$billingAddress: String!, 
-		$contactEmail: String!, 
-		$contactPhone: String!, 
-		$defaultCurrency: String!, 
-		$logoUrl: String!
+		$companyId: Int!
+		$name: String!
+		$taxId: String!
+		$billingAddress: String!
+		$contactEmail: String!
+		$contactPhone: String!
+		$defaultCurrency: String!
+		$logoUrl: String # Opcional
+		$logoFile: Upload # Opcional (Aquí va el nuevo archivo si hay uno)
 	) {
 		updateCompany(
-			companyId: $companyId,
-			name: $name, 
-			taxId: $taxId, 
-			billingAddress: $billingAddress, 
-			contactEmail: $contactEmail, 
-			contactPhone: $contactPhone, 
-			defaultCurrency: $defaultCurrency, 
+			companyId: $companyId
+			name: $name
+			taxId: $taxId
+			billingAddress: $billingAddress
+			contactEmail: $contactEmail
+			contactPhone: $contactPhone
+			defaultCurrency: $defaultCurrency
 			logoUrl: $logoUrl
+			logoFile: $logoFile
 		) {
 			companyId
 			name
-			billingAddress
+			logoUrl
 		}
 	}
 `;
@@ -710,17 +713,19 @@ export const GET_INVENTORY_PARTS_QUERY = () => gql`
 export const CREATE_INVENTORY_PART_MUTATION = gql`
 	mutation CreateInventoryPart(
 		$imageUrl: String
+		$imageFile: Upload
 		$name: String!
 		$stockQuantity: Int!
-		$unitCost: Float!
-		$taxCost: Float!
-		$totalUnitCost: Float!
-		$basePrice: Float!
+		$unitCost: Decimal!
+		$taxCost: Decimal!
+		$totalUnitCost: Decimal!
+		$basePrice: Decimal!
 		$currency: String!
 		$minStockAlert: Int!
 	) {
 		addInventoryPart(
 			imageUrl: $imageUrl
+			imageFile: $imageFile
 			name: $name
 			stockQuantity: $stockQuantity
 			unitCost: $unitCost

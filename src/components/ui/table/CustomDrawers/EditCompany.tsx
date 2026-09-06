@@ -30,6 +30,7 @@ export default function EditCompany({ row, onClose }: { row: any; onClose?: () =
 	const [contactPhone, setContactPhone] = useState(initialPhone || "");
 	const [defaultCurrency, setDefaultCurrency] = useState(initialCurrency || "USD");
 	const [logoUrl, setLogoUrl] = useState(initialLogo || "");
+	const [logoFile, setLogoFile] = useState<File | null>(null);
 
 	const [mutateFunction, { loading }] = useMutation(UPDATE_COMPANY_MUTATION, {
 		refetchQueries: [{ query: GET_COMPANIES_QUERY() }],
@@ -39,14 +40,15 @@ export default function EditCompany({ row, onClose }: { row: any; onClose?: () =
 		try {
 			await mutateFunction({
 				variables: {
-                    companyId: Number(companyId),
+					companyId: Number(companyId),
 					name,
 					taxId,
 					billingAddress,
 					contactEmail,
 					contactPhone,
 					defaultCurrency,
-					logoUrl: "", // forced to empty string per user request to send null
+					logoUrl, 
+					logoFile,
 				},
 			});
 
@@ -187,8 +189,7 @@ export default function EditCompany({ row, onClose }: { row: any; onClose?: () =
 							id="logo_input"
 							accept="image/*"
 							onChange={(e) => {
-								// Por ahora no hacemos nada con el archivo, mandaremos "" al backend
-								console.log("Archivo seleccionado:", e.target.files?.[0]);
+								setLogoFile(e.target.files?.[0] || null);
 							}}
 							className="pl-[42px] file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-brand-900/30 dark:file:text-brand-400"
 						/>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { toast } from "sonner";
-import { CurrencyDollarIcon, CubeIcon, BellAlertIcon } from "@heroicons/react/24/outline";
+import { CurrencyDollarIcon, CubeIcon, BellAlertIcon, PhotoIcon } from "@heroicons/react/24/outline";
 
 import Label from "../../../form/Label";
 import Input from "../../../form/input/InputField";
@@ -22,9 +22,10 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 	const [basePrice, setBasePrice] = useState(0);
 	const [currency, setCurrency] = useState("NIO");
 	const [minStockAlert, setMinStockAlert] = useState(0);
+	const [imageFile, setImageFile] = useState<File | null>(null);
 
 	const [mutateFunction, { loading }] = useMutation(CREATE_INVENTORY_PART_MUTATION, {
-		refetchQueries: [{ query: GET_INVENTORY_PARTS_QUERY() }],
+		refetchQueries: ["GetInventoryParts"],
 	});
 
 	const handleSubmit = async () => {
@@ -37,6 +38,7 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 			const { errors } = await mutateFunction({
 				variables: {
 					imageUrl: null,
+					imageFile: imageFile,
 					name,
 					stockQuantity: parseInt(stockQuantity.toString(), 10),
 					unitCost: parseFloat(unitCost.toString()),
@@ -217,6 +219,27 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 						/>
 						<span className="absolute left-0 top-1/2 -translate-y-1/2 px-3 text-gray-500">
 							<BellAlertIcon className="size-5" />
+						</span>
+					</div>
+				</div>
+
+				{/* Image URL */}
+				<div className="col-span-1 md:col-span-2">
+					<Label htmlFor="image_input">
+						<FormattedMessage id="image" defaultMessage="Imagen del repuesto" />
+					</Label>
+					<div className="relative">
+						<Input
+							type="file"
+							id="image_input"
+							accept="image/*"
+							onChange={(e) => {
+								setImageFile(e.target.files?.[0] || null);
+							}}
+							className="pl-[42px] file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-brand-900/30 dark:file:text-brand-400"
+						/>
+						<span className="absolute left-0 top-1/2 -translate-y-1/2 px-3 text-gray-500">
+							<PhotoIcon className="size-5" />
 						</span>
 					</div>
 				</div>
