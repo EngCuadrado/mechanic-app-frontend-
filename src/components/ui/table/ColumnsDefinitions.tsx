@@ -26,6 +26,7 @@ import TransactionPay from "./CustomCells/TransactionPay";
 import TransactionMedicine from "./CustomCells/TransactionMedicine";
 import TransactionEmployee from "./CustomCells/TransactionEmployee";
 import { BatchTableActions } from "./CustomCells/BatchTableActions";
+import { InventoryPartCellActions } from "./CustomCells/InventoryPartCellActions";
 import { FaBox } from "react-icons/fa6";
 
 import {
@@ -920,59 +921,92 @@ export const useInventoryColumns = () => {
 	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
 			{
-				header: "Image",
-				accessorKey: "imageUrl",
-				id: "imageUrl",
-				cell: ({ getValue }) => {
-					const url = getValue() as string;
-					return url ? (
-						<img src={url} alt="Inventory" className="w-10 h-10 object-cover rounded-md" />
-					) : (
-						<Avatar variant="rounded" sx={{ width: 40, height: 40 }}>
-							<FaBox />
-						</Avatar>
+				header: intl.formatMessage({ id: "product", defaultMessage: "Repuesto" }),
+				id: "product_info",
+				cell: ({ row }) => {
+					const { imageUrl, name } = row.original;
+					return (
+						<div className="flex items-center gap-3">
+							{imageUrl ? (
+								<div className="w-10 h-10 flex-shrink-0 bg-gray-50 dark:bg-dark-800 rounded-lg p-1 border border-gray-100 dark:border-dark-700">
+									<img
+										src={imageUrl}
+										alt={name}
+										className="w-full h-full object-cover rounded-md"
+									/>
+								</div>
+							) : (
+								<div className="w-10 h-10 flex-shrink-0 bg-gray-100 dark:bg-dark-700 rounded-lg flex items-center justify-center border border-gray-200 dark:border-dark-600">
+									<FaBox className="size-5 text-gray-400" />
+								</div>
+							)}
+							<div className="flex flex-col">
+								<span className="text-sm font-semibold text-gray-800 dark:text-gray-100 line-clamp-2">
+									{name}
+								</span>
+							</div>
+						</div>
 					);
 				},
 			},
 			{
-				header: intl.formatMessage({ id: "name", defaultMessage: "Name" }),
-				accessorKey: "name",
-				id: "name",
+				header: intl.formatMessage({ id: "stock", defaultMessage: "Inventario" }),
+				id: "stock",
+				cell: ({ row }) => {
+					const { stockQuantity, minStockAlert } = row.original;
+					const isLow = stockQuantity <= minStockAlert;
+					return (
+						<div className="flex flex-col gap-1">
+							<div className="flex items-center gap-2">
+								<div
+									className={`size-2.5 rounded-full ${
+										stockQuantity <= 0
+											? "bg-gray-500"
+											: isLow
+												? "bg-red-500"
+												: stockQuantity <= minStockAlert * 1.5
+													? "bg-yellow-500"
+													: "bg-green-500"
+									}`}
+									title={`Mínimo: ${minStockAlert}`}
+								/>
+								<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+									{stockQuantity} uds.
+								</span>
+							</div>
+						</div>
+					);
+				},
 			},
 			{
-				header: intl.formatMessage({ id: "stock", defaultMessage: "Stock Quantity" }),
-				accessorKey: "stockQuantity",
-				id: "stockQuantity",
+				header: intl.formatMessage({ id: "pricing", defaultMessage: "Precios" }),
+				id: "pricing",
+				cell: ({ row }) => {
+					const { totalUnitCost, basePrice, currency } = row.original;
+					return (
+						<div className="flex flex-col gap-1 text-sm font-medium">
+							<div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+								<span className="text-xs">Costo:</span>
+								<span>{currency} {totalUnitCost?.toFixed(2)}</span>
+							</div>
+							<div className="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-semibold">
+								<span className="text-xs text-gray-500 dark:text-gray-400">Precio:</span>
+								<span>{currency} {basePrice?.toFixed(2)}</span>
+							</div>
+						</div>
+					);
+				},
 			},
 			{
-				header: intl.formatMessage({ id: "unitCost", defaultMessage: "Unit Cost" }),
-				accessorKey: "unitCost",
-				id: "unitCost",
+				header: intl.formatMessage({ id: "status", defaultMessage: "Estado" }),
+				accessorKey: "isActive",
+				cell: ({ getValue }) => (
+					<Status status={getValue() ? true : false} />
+				),
 			},
 			{
-				header: intl.formatMessage({ id: "taxCost", defaultMessage: "Tax Cost" }),
-				accessorKey: "taxCost",
-				id: "taxCost",
-			},
-			{
-				header: intl.formatMessage({ id: "totalUnitCost", defaultMessage: "Total Unit Cost" }),
-				accessorKey: "totalUnitCost",
-				id: "totalUnitCost",
-			},
-			{
-				header: intl.formatMessage({ id: "basePrice", defaultMessage: "Base Price" }),
-				accessorKey: "basePrice",
-				id: "basePrice",
-			},
-			{
-				header: intl.formatMessage({ id: "currency", defaultMessage: "Currency" }),
-				accessorKey: "currency",
-				id: "currency",
-			},
-			{
-				header: intl.formatMessage({ id: "minStockAlert", defaultMessage: "Min Stock Alert" }),
-				accessorKey: "minStockAlert",
-				id: "minStockAlert",
+				id: "actions",
+				cell: ({ row }) => <InventoryPartCellActions row={row} />,
 			},
 		],
 		[intl],
@@ -980,3 +1014,4 @@ export const useInventoryColumns = () => {
 
 	return columns;
 };
+

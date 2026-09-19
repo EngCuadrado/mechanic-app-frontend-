@@ -8,28 +8,47 @@ import Input from "../../../form/input/InputField";
 import Select from "../../../form/Select";
 
 import { useMutation } from "@apollo/client/react";
-import { CREATE_INVENTORY_PART_MUTATION } from "../QuerysDefinitions";
+import { UPDATE_INVENTORY_PART_MUTATION } from "../QuerysDefinitions";
 import { FaBox } from "react-icons/fa6";
 
-export default function AddNewInventoryPart({ onClose }: { onClose?: () => void }) {
+interface InventoryPartData {
+	inventoryPartId: number;
+	name: string;
+	stockQuantity: number;
+	unitCost: number;
+	taxCost: number;
+	totalUnitCost: number;
+	basePrice: number;
+	currency: string;
+	minStockAlert: number;
+	imageUrl?: string;
+}
+
+interface EditInventoryPartProps {
+	row: { original: InventoryPartData };
+	onClose: () => void;
+}
+
+export default function EditInventoryPart({ row, onClose }: EditInventoryPartProps) {
 	const intl = useIntl();
+	const initialData = row.original;
 
 	// Main info
-	const [name, setName] = useState("");
+	const [name, setName] = useState(initialData.name || "");
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
 	// Stock
-	const [stockQuantity, setStockQuantity] = useState(0);
-	const [minStockAlert, setMinStockAlert] = useState(0);
+	const [stockQuantity, setStockQuantity] = useState(initialData.stockQuantity || 0);
+	const [minStockAlert, setMinStockAlert] = useState(initialData.minStockAlert || 0);
 
 	// Costs & Pricing
-	const [unitCost, setUnitCost] = useState(0);
-	const [taxCost, setTaxCost] = useState(15);
-	const [totalUnitCost, setTotalUnitCost] = useState(0);
-	const [basePrice, setBasePrice] = useState(0);
-	const [currency, setCurrency] = useState("NIO");
+	const [unitCost, setUnitCost] = useState(initialData.unitCost || 0);
+	const [taxCost, setTaxCost] = useState(initialData.taxCost || 15);
+	const [totalUnitCost, setTotalUnitCost] = useState(initialData.totalUnitCost || 0);
+	const [basePrice, setBasePrice] = useState(initialData.basePrice || 0);
+	const [currency, setCurrency] = useState(initialData.currency || "NIO");
 
-	const [mutateFunction, { loading }] = useMutation(CREATE_INVENTORY_PART_MUTATION, {
+	const [mutateFunction, { loading }] = useMutation(UPDATE_INVENTORY_PART_MUTATION, {
 		refetchQueries: ["GetInventoryParts"],
 	});
 
@@ -50,8 +69,7 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 		try {
 			const { errors } = await mutateFunction({
 				variables: {
-					imageUrl: null,
-					imageFile: imageFile,
+					inventoryPartId: Number(initialData.inventoryPartId),
 					name,
 					stockQuantity: parseInt(stockQuantity.toString(), 10),
 					unitCost: parseFloat(unitCost.toString()),
@@ -60,6 +78,8 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 					basePrice: parseFloat(basePrice.toString()),
 					currency,
 					minStockAlert: parseInt(minStockAlert.toString(), 10),
+					imageUrl: initialData.imageUrl || null,
+					imageFile: imageFile,
 				},
 			});
 

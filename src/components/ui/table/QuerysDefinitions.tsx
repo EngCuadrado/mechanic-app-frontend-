@@ -701,6 +701,7 @@ export const GET_INVENTORY_PARTS_QUERY = () => gql`
 				basePrice
 				currency
 				minStockAlert
+				isActive
 			}
 			pageInfo {
 				hasNextPage
@@ -740,6 +741,51 @@ export const CREATE_INVENTORY_PART_MUTATION = gql`
 			imageUrl
 			stockQuantity
 			basePrice
+		}
+	}
+`;
+export const UPDATE_INVENTORY_PART_MUTATION = gql`
+	mutation UpdateInventoryPart(
+		$inventoryPartId: Int!
+		$name: String!
+		$stockQuantity: Int!
+		$unitCost: Decimal!
+		$taxCost: Decimal!
+		$totalUnitCost: Decimal!
+		$basePrice: Decimal!
+		$currency: String!
+		$minStockAlert: Int!
+		$imageUrl: String
+		$imageFile: Upload
+	) {
+		updateInventoryPart(
+			inventoryPartId: $inventoryPartId,
+			name: $name,
+			stockQuantity: $stockQuantity,
+			unitCost: $unitCost,
+			taxCost: $taxCost,
+			totalUnitCost: $totalUnitCost,
+			basePrice: $basePrice,
+			currency: $currency,
+			minStockAlert: $minStockAlert,
+			imageUrl: $imageUrl,
+			imageFile: $imageFile
+		) {
+			inventoryPartId
+			name
+			stockQuantity
+			unitCost
+			isActive
+		}
+	}
+`;
+
+export const TOGGLE_INVENTORY_PART_STATUS_MUTATION = gql`
+	mutation ToggleInventoryPartStatus($inventoryPartId: Int!) {
+		toggleInventoryPartStatus(inventoryPartId: $inventoryPartId) {
+			inventoryPartId
+			name
+			isActive
 		}
 	}
 `;

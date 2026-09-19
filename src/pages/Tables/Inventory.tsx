@@ -24,7 +24,7 @@ const AddNewInventoryModal = ({ onClose }: { onClose: () => void }) => {
 			isOpen={true}
 			onClose={onClose}
 			title={intl.formatMessage({ id: "inventory.add", defaultMessage: "Agregar Producto" })}
-			widthClass="w-full max-w-lg md:max-w-2xl lg:max-w-3xl"
+			widthClass="w-full max-w-md md:max-w-xl"
 			disableOutsideClick={true}
 		>
 			<AddNewInventoryPart onClose={onClose} />
