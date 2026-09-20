@@ -880,3 +880,76 @@ export const GET_VEHICLE_MODELS_QUERY = () => gql`
       }
     }
 `;
+
+export const GET_VEHICLES_QUERY = () => gql`
+query GetVehicles($first: Int, $after: String, $order: [VehicleSortInput!], $where: VehicleFilterInput) {
+  vehicles(first: $first, after: $after, order: $order, where: $where) {
+    nodes {
+      vehicleId
+      companyId
+      modelId
+      plate
+      vin
+      year
+      currentMilage
+      status
+      mechanicalInspectionExpiration
+      emissionsInspectionExpiration
+      insuranceExpirationDate
+      nextMaintenanceDate
+      company {
+        name
+      }
+      model {
+        modelName
+        brand {
+          brandName
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+`;
+
+
+export const ADD_VEHICLE_MUTATION = gql`
+mutation AddVehicle(
+  $companyId: Int!
+  $modelId: Int!
+  $plate: String!
+  $vin: String!
+  $chassisNumber: String!
+  $year: Int!
+  $currentMilage: Int!
+  $nextMaintenanceDate: LocalDate!
+  $nextMaintenanceMilage: Int!
+  $insuranceExpirationDate: LocalDate!
+  $mechanicalInspectionExpiration: LocalDate!
+  $emissionsInspectionExpiration: LocalDate!
+) {
+  addVehicle(
+    companyId: $companyId
+    modelId: $modelId
+    plate: $plate
+    vin: $vin
+    chassisNumber: $chassisNumber
+    year: $year
+    currentMilage: $currentMilage
+    nextMaintenanceDate: $nextMaintenanceDate
+    nextMaintenanceMilage: $nextMaintenanceMilage
+    insuranceExpirationDate: $insuranceExpirationDate
+    mechanicalInspectionExpiration: $mechanicalInspectionExpiration
+    emissionsInspectionExpiration: $emissionsInspectionExpiration
+    status: DISPONIBLE
+  ) {
+    vehicleId
+    plate
+    vin
+    status
+  }
+}
+`;

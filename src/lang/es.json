@@ -351,5 +351,6 @@
     "user.profile.postalCode": "Código Postal",
     "user.profile.saveChanges": "Guardar cambios",
     "user.profile.taxId": "ID Fiscal",
+    "vehicles": "{count, plural, one {Vehículo} other {Vehículos}}",
     "website": "Sitio web"
 }

@@ -156,6 +156,7 @@ export const useEmployeeColumns = () => {
 			{
 				header: intl.formatMessage({ id: "role" }),
 				accessorKey: "roleName.name",
+                id: "roleName.name",
 				enableSorting: true,
 				cell: ({ getValue }) => (
 					<span className="text-sm">{getValue() as string}</span>
@@ -821,7 +822,8 @@ export const useCompanyColumns = () => {
 		() => [
 			{
 				header: intl.formatMessage({ id: "company.info", defaultMessage: "Empresa" }),
-				id: "company",
+				accessorKey: "company.name",
+                id: "company.name",
 				cell: ({ row }) => (
 					<div className="flex items-center gap-4">
 						{row.original.logoUrl ? (
@@ -945,7 +947,7 @@ export const useInventoryColumns = () => {
 													? "bg-yellow-500"
 													: "bg-green-500"
 									}`}
-									title={`M�nimo: ${minStockAlert}`}
+									title={`M�nimo: ${minStockAlert}`}
 								/>
 								<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
 									{stockQuantity} uds.
@@ -1035,3 +1037,79 @@ export const useVehicleModelColumns = () => {
 	);
 	return columns;
 };
+
+import { VehicleBrandModel } from "./CustomCells/VehicleBrandModel";
+import { VehicleStatus } from "./CustomCells/VehicleStatus";
+import { VehicleDates } from "./CustomCells/VehicleDates";
+
+export const useVehicleColumns = () => {
+    const columns = useMemo<ColumnDef<any>[]>(
+        () => [
+            {
+                header: "Vehículo",
+                accessorKey: "plate",
+                cell: ({ row }) => (
+                    <div className="flex flex-col gap-1">
+                        <span className="text-base font-semibold text-gray-800 dark:text-gray-100">
+                            {row.original.plate}
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            VIN: {row.original.vin || "N/A"}
+                        </span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                            Año: {row.original.year || "N/A"} | Milaje: {row.original.currentMilage || 0}
+                        </span>
+                    </div>
+                ),
+            },
+            {
+                header: "Modelo",
+                accessorKey: "model.modelName",
+                id: "model.modelName",
+                cell: ({ row }) => (
+                    <VehicleBrandModel 
+                        brandName={row.original.model?.brand?.brandName} 
+                        modelName={row.original.model?.modelName} 
+                    />
+                ),
+            },
+            {
+                header: "Empresa",
+                // accessorKey: "plate",
+                accessorKey: "company.name",
+                id: "company.name",
+                cell: ({ row }) => (
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {row.original.company?.name || "Disponible"}
+                    </span>
+                ),
+            },
+            {
+                header: "Estado",
+                accessorKey: "status",
+                cell: ({ row }) => (
+                    <VehicleStatus status={row.original.status} />
+                ),
+            },
+            {
+                header: "Vencimientos",
+                id: "dates",
+                cell: ({ row }) => (
+                    <VehicleDates 
+                        insuranceDate={row.original.insuranceExpirationDate}
+                        mechanicalDate={row.original.mechanicalInspectionExpiration}
+                        emissionsDate={row.original.emissionsInspectionExpiration}
+                        maintenanceDate={row.original.nextMaintenanceDate}
+                    />
+                ),
+            },
+        ],
+        []
+    );
+    return columns;
+};
+
+
+
+
+

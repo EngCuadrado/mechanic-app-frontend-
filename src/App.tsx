@@ -33,6 +33,7 @@ import Empleados from "./pages/Empleados";
 import Reportes from "./pages/Reportes";
 import Sales from "./components/ui/catalogs/Sales";
 import Inventory from "./pages/Tables/Inventory";
+import Vehicles from "./pages/Tables/Vehicles";
 
 export default function App() {
 	const locale = "es-NI";
@@ -77,6 +78,11 @@ export default function App() {
 								<Route
 									path="/inventory"
 									element={<Inventory />}
+								/>
+
+								<Route
+									path="/vehicles"
+									element={<Vehicles />}
 								/>
 
 								<Route

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import {
 	FolderOpenIcon,
 	ArchiveBoxIcon,
+    TruckIcon,
 } from "@heroicons/react/24/outline";
 
 import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
@@ -27,6 +28,11 @@ const AppSidebar: React.FC = () => {
 
 	const navItems: NavItem[] = useMemo(() => {
 		const items: NavItem[] = [
+			{
+				icon: <TruckIcon className="size-6" />,
+				name:  intl.formatMessage({ id: "vehicles" }, { count: 2 }),
+				path: "/vehicles",
+			},
 			{
 				icon: <ArchiveBoxIcon />,
 				name: intl.formatMessage({ id: "inventory" }),

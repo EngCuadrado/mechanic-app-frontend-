@@ -63,10 +63,7 @@ export function ServerDataTable<TData>({
 	}, [filter, resetPagination]);
 
 	// 3. Formatear variables para GraphQL
-	const order =
-		sorting.length > 0
-			? { [sorting[0].id]: sorting[0].desc ? "DESC" : "ASC" }
-			: null;
+	const order = sorting.length > 0 ? [sorting[0].id.split(".").reverse().reduce((acc, key) => ({ [key]: acc }), sorting[0].desc ? "DESC" : "ASC")] : null;
 
 	// 4. Hook useQuery de Apollo
 	// Se dispara automáticamente cuando cambian variables (pagination o sorting)
@@ -220,3 +217,5 @@ export function ServerDataTable<TData>({
 		</div>
 	);
 }
+
+
