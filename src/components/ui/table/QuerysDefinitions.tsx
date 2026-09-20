@@ -789,3 +789,94 @@ export const TOGGLE_INVENTORY_PART_STATUS_MUTATION = gql`
 		}
 	}
 `;
+
+export const GET_VEHICLE_BRANDS_QUERY = () => gql`
+    query GetVehicleBrands($first: Int, $after: String) {
+      vehicleBrands(first: $first, after: $after, order: [{ brandName: ASC }]) {
+        nodes {
+          brandId
+          brandName
+          models {
+            modelId
+            modelName
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+`;
+
+export const ADD_VEHICLE_BRAND_MUTATION = gql`
+    mutation AddBrand($brandName: String!) {
+      addBrand(brandName: $brandName) {
+        brandId
+        brandName
+      }
+    }
+`;
+
+export const UPDATE_VEHICLE_BRAND_MUTATION = gql`
+ mutation UpdateBrand($brandId: Int!, $newBrandName: String!) {
+      updateBrand(brandId: $brandId, newBrandName: $newBrandName) {
+        brandId
+        brandName
+      }
+    }
+`;
+
+export const DELETE_VEHICLE_BRAND_MUTATION = gql`
+mutation DeleteBrand($brandId: Int!) {
+ deleteBrand(brandId: $brandId)
+}
+`;
+
+export const ADD_VEHICLE_MODEL_MUTATION = gql`
+ mutation AddModel($brandId: Int!, $modelName: String!) {
+      addModel(brandId: $brandId, modelName: $modelName) {
+        modelId
+        brandId
+        modelName
+      }
+    }
+`;
+
+export const UPDATE_VEHICLE_MODEL_MUTATION = gql`
+    mutation UpdateModel($modelId: Int!, $newBrandId: Int!, $newModelName: String!) {
+      updateModel(modelId: $modelId, newBrandId: $newBrandId, newModelName: $newModelName) {
+        modelId
+        modelName
+        brand {
+          brandId
+          brandName
+        }
+      }
+    }
+`;
+
+export const DELETE_VEHICLE_MODEL_MUTATION = gql`
+    mutation DeleteModel($modelId: Int!) {
+      deleteModel(modelId: $modelId)
+    }
+`;
+
+export const GET_VEHICLE_MODELS_QUERY = () => gql`
+    query GetVehicleModels($first: Int, $after: String) {
+      vehicleModels(first: $first, after: $after, order: [{ modelName: ASC }]) {
+        nodes {
+          modelId
+          brandId
+          modelName
+          brand {
+            brandName
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+`;

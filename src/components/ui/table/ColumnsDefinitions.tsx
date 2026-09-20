@@ -994,3 +994,44 @@ export const useInventoryColumns = () => {
 
 
 
+
+import { VehicleModelCellActions } from "./CustomCells/VehicleModelCellActions";
+
+export const useVehicleModelColumns = () => {
+	const intl = useIntl();
+	const columns = useMemo<ColumnDef<any>[]>(
+		() => [
+			{
+				header: intl.formatMessage({ id: "modelName", defaultMessage: "Modelo" }),
+				id: "modelName",
+				cell: ({ row }) => (
+					<div className="flex items-center gap-4">
+						<span className="text-base font-semibold text-gray-800 dark:text-gray-100">
+							{row.original.modelName}
+						</span>
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "brand", defaultMessage: "Marca" }),
+				id: "brand",
+				cell: ({ row }) => (
+					<div className="flex flex-col gap-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+						{row.original.brand && (
+							<span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full w-fit border border-gray-200 dark:border-gray-700">
+								{row.original.brand.brandName}
+							</span>
+						)}
+					</div>
+				),
+			},
+			{
+				header: intl.formatMessage({ id: "actions" }),
+				id: "actions",
+				cell: ({ row }) => <VehicleModelCellActions row={row} />,
+			},
+		],
+		[intl]
+	);
+	return columns;
+};

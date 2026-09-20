@@ -15,6 +15,7 @@ import SupplierTypes from "../../components/ui/catalogs/SupplierTypes";
 import Suppliers from "../../components/ui/catalogs/Suppliers";
 import Mechanics from "../../components/ui/catalogs/Mechanics";
 import Companies from "../../components/ui/catalogs/Companies";
+import VehicleModels from "../../components/ui/catalogs/VehicleModels";
 
 interface TabPanelProps {
 	children?: React.ReactNode;
@@ -62,6 +63,10 @@ export default function Catalogs() {
 		{
 			label: <FormattedMessage id="mechanics" values={{ count: 2 }} />,
 			content: <Mechanics />,
+		},
+		{
+			label: <FormattedMessage id="models" defaultMessage="Modelos" values={{ count: 2 }} />,
+			content: <VehicleModels />,
 		},
 	];
 
