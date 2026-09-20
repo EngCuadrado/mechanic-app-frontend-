@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { Avatar } from "@mui/material";
 import { ColumnDef } from "@tanstack/react-table";
 import { useIntl } from "react-intl";
@@ -10,6 +10,7 @@ import { BatchStock } from "./CustomCells/BatchStock";
 import { stringAvatar } from "../../../utils/AvatarUtils";
 import BatchExpiration from "./CustomCells/ExpirationDate";
 import { BrandCellActions } from "./CustomCells/BrandCellActions";
+import { VehicleCellActions } from "./CustomCells/VehicleCellActions";
 import { CategoryCellActions } from "./CustomCells/CategoryCellActions";
 import { ActiveIngredientCellActions } from "./CustomCells/ActiveIngredientCellActions";
 import { AdministrationRouteCellActions } from "./CustomCells/AdministrationRouteCellActions";
@@ -1103,11 +1104,18 @@ export const useVehicleColumns = () => {
                     />
                 ),
             },
+            {
+                id: "actions",
+                cell: ({ row }) => <VehicleCellActions row={row} />,
+            },
         ],
         []
     );
     return columns;
 };
+
+
+
 
 
 

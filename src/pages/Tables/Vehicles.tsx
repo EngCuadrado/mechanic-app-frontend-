@@ -14,7 +14,7 @@ const AddNewVehicleModal = ({ onClose }: { onClose: () => void }) => {
         <SimpleModal
             isOpen={true}
             onClose={onClose}
-            title="Agregar Vehículo"
+            title="Agregar VehÃ­culo"
             widthClass="w-full max-w-md md:max-w-2xl"
             disableOutsideClick={true}
         >
@@ -34,7 +34,7 @@ export default function Vehicles() {
         <div className="flex-1">
             <div className="flex items-center justify-between mb-4">
                 <PageBreadcrumb
-                    pageTitle="Vehículos"
+                    pageTitle="VehÃ­culos"
                 />
             </div>
 
@@ -45,7 +45,7 @@ export default function Vehicles() {
                         className="px-4 py-2 text-white rounded-xl transition-colors flex items-center gap-2 bg-brand-500 hover:bg-brand-600 cursor-pointer"
                     >
                         <PlusCircleIcon className="h-5 w-5" />
-                        Agregar Vehículo
+                        Agregar VehÃ­culo
                     </button>
                 </div>
 

@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+﻿import { gql } from "@apollo/client";
 
 export const GET_ALL_SALES = () => gql`
 	query GetSalesWithDetails(
@@ -889,6 +889,7 @@ query GetVehicles($first: Int, $after: String, $order: [VehicleSortInput!], $whe
       companyId
       modelId
       plate
+	  chassisNumber
       vin
       year
       currentMilage
@@ -953,3 +954,59 @@ mutation AddVehicle(
   }
 }
 `;
+
+export const UPDATE_VEHICLE_MUTATION = gql`
+  mutation UpdateVehicle(
+    $vehicleId: Int!
+    $companyId: Int!
+    $modelId: Int!
+    $plate: String!
+    $vin: String!
+    $chassisNumber: String!
+    $year: Int!
+    $currentMilage: Int!
+    $nextMaintenanceDate: LocalDate!
+    $nextMaintenanceMilage: Int!
+    $insuranceExpirationDate: LocalDate!
+    $mechanicalInspectionExpiration: LocalDate!
+    $emissionsInspectionExpiration: LocalDate!
+    $status: VehicleStatuses
+  ) {
+    updateVehicle(
+      vehicleId: $vehicleId
+      companyId: $companyId
+      modelId: $modelId
+      plate: $plate
+      vin: $vin
+      chassisNumber: $chassisNumber
+      year: $year
+      currentMilage: $currentMilage
+      nextMaintenanceDate: $nextMaintenanceDate
+      nextMaintenanceMilage: $nextMaintenanceMilage
+      insuranceExpirationDate: $insuranceExpirationDate
+      mechanicalInspectionExpiration: $mechanicalInspectionExpiration
+      emissionsInspectionExpiration: $emissionsInspectionExpiration
+      status: $status
+    ) {
+      vehicleId
+      plate
+      vin
+      chassisNumber
+      year
+      currentMilage
+      status
+      nextMaintenanceDate
+      company {
+        name
+      }
+      model {
+        modelName
+        brand {
+          brandName
+        }
+      }
+    }
+  }
+`;
+
+

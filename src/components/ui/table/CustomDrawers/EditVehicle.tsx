@@ -6,14 +6,14 @@ import Input from "../../../form/input/InputField";
 import Select from "../../../form/Select";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { 
-    ADD_VEHICLE_MUTATION, 
+    UPDATE_VEHICLE_MUTATION, 
     GET_COMPANIES_QUERY, 
     GET_VEHICLE_MODELS_QUERY 
 } from "../QuerysDefinitions";
 import Button from "../../../ui/button/Button";
 import Loading from "../../loading/Loading";
 
-export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
+export default function EditVehicle({ row, onClose }: { row: any; onClose?: () => void }) {
     const intl = useIntl();
     // Queries
     const { data: companiesData, loading: loadingCompanies } = useQuery(GET_COMPANIES_QUERY());
@@ -22,20 +22,21 @@ export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
     });
 
     // Form state
-    const [companyId, setCompanyId] = useState<string>("");
-    const [modelId, setModelId] = useState<string>("");
-    const [plate, setPlate] = useState("");
-    const [vin, setVin] = useState("");
-    const [chassisNumber, setChassisNumber] = useState("");
-    const [year, setYear] = useState<number>(new Date().getFullYear());
-    const [currentMilage, setCurrentMilage] = useState<number>(0);
-    const [nextMaintenanceDate, setNextMaintenanceDate] = useState("");
-    const [nextMaintenanceMilage, setNextMaintenanceMilage] = useState<number>(0);
-    const [insuranceExpirationDate, setInsuranceExpirationDate] = useState("");
-    const [mechanicalInspectionExpiration, setMechanicalInspectionExpiration] = useState("");
-    const [emissionsInspectionExpiration, setEmissionsInspectionExpiration] = useState("");
+    const [companyId, setCompanyId] = useState<string>(row.company?.companyId?.toString() || row.companyId?.toString() || "");
+    const [modelId, setModelId] = useState<string>(row.model?.modelId?.toString() || row.modelId?.toString() || "");
+    const [plate, setPlate] = useState(row.plate || "");
+    const [vin, setVin] = useState(row.vin || "");
+    const [chassisNumber, setChassisNumber] = useState(row.chassisNumber || "");
+    const [year, setYear] = useState<number>(row.year || new Date().getFullYear());
+    const [currentMilage, setCurrentMilage] = useState<number>(row.currentMilage || 0);
+    const [nextMaintenanceDate, setNextMaintenanceDate] = useState(row.nextMaintenanceDate || "");
+    const [nextMaintenanceMilage, setNextMaintenanceMilage] = useState<number>(row.nextMaintenanceMilage || 0);
+    const [insuranceExpirationDate, setInsuranceExpirationDate] = useState(row.insuranceExpirationDate || "");
+    const [mechanicalInspectionExpiration, setMechanicalInspectionExpiration] = useState(row.mechanicalInspectionExpiration || "");
+    const [emissionsInspectionExpiration, setEmissionsInspectionExpiration] = useState(row.emissionsInspectionExpiration || "");
+    const [status, setStatus] = useState<string>(row.status || "DISPONIBLE");
 
-    const [addVehicle, { loading: saving }] = useMutation(ADD_VEHICLE_MUTATION, {
+    const [updateVehicle, { loading: saving }] = useMutation(UPDATE_VEHICLE_MUTATION, {
         refetchQueries: ["GetVehicles"],
     });
 
@@ -46,8 +47,9 @@ export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
         }
 
         try {
-            await addVehicle({
+            await updateVehicle({
                 variables: {
+                    vehicleId: parseInt(row.vehicleId),
                     companyId: parseInt(companyId),
                     modelId: parseInt(modelId),
                     plate: plate.toUpperCase(),
@@ -60,9 +62,10 @@ export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
                     insuranceExpirationDate: insuranceExpirationDate,
                     mechanicalInspectionExpiration: mechanicalInspectionExpiration,
                     emissionsInspectionExpiration: emissionsInspectionExpiration,
+                    status,
                 }
             });
-            toast.success("Vehículo agregado correctamente.");
+            toast.success(intl.formatMessage({ id: "vehicle.edit.success" }));
             if (onClose) onClose();
         } catch (error: any) {
             toast.error(error.message || "Error al agregar el vehículo.");
@@ -86,6 +89,7 @@ export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
     return (
         <div className="flex flex-col gap-5 p-1 max-h-[80vh] overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div><Label>{intl.formatMessage({ id: "vehicle.form.status" })} *</Label><Select options={[{ value: "MANTENIMIENTO", label: "MANTENIMIENTO" },{ value: "DISPONIBLE", label: "DISPONIBLE" },{ value: "ALQUILADO", label: "ALQUILADO" },{ value: "FUERA_DE_SERVICIO", label: "FUERA_DE_SERVICIO" }]} value={status} onChange={setStatus} placeholder="Seleccione Estado" /></div>
                 <div>
                     <Label>{intl.formatMessage({ id: "vehicle.form.company" })} *</Label>
                     <Select
@@ -201,12 +205,16 @@ export default function AddNewVehicle({ onClose }: { onClose?: () => void }) {
                     {intl.formatMessage({ id: "cancel" })}
                 </Button>
                 <Button size="sm" onClick={handleSubmit} disabled={saving}>
-                    {saving ? `${intl.formatMessage({ id: "saving" })}...` : intl.formatMessage({ id: "vehicle.form.save" })}
+                    {saving ? `${intl.formatMessage({ id: "saving" })}...` : intl.formatMessage({ id: "vehicle.form.update" })}
                 </Button>
             </div>
         </div>
     );
 }
+
+
+
+
 
 
 
