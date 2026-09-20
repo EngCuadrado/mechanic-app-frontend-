@@ -59,8 +59,8 @@ export default function App() {
 							{/* Agrupa todas las rutas protegidas aquí dentro */}
 							<Route element={<ProtectedRoute />}>
 								{/* PAGINAS PRINCIPALES ACCESIBLES POR TODOS LOS ROLES AUTENTICADOS (DENTRO DE ESTE GRUPO) */}
-								<Route path="/home" element={<Home />} />
-								<Route path="/calendar" element={<Home />} />
+								<Route path="/home" element={<></>} />
+								<Route path="/calendar" element={<></>} />
 								<Route
 									path="/profile"
 									element={<UserProfiles />}

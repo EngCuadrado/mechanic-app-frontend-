@@ -141,7 +141,7 @@ export default function Home() {
 		<div className="space-y-4">
 			<PageMeta
 				title="Dashboard"
-				description="Panel de control de Farmacia Guadalupe"
+				description="Panel de control"
 			/>
 
 			{/* Botón para disparar la exportación a PDF */}

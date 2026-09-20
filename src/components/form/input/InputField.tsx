@@ -1,7 +1,7 @@
-import type React from "react";
+﻿import type React from "react";
 import type { FC } from "react";
 
-interface InputProps {
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
 	type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
 	id?: string;
 	name?: string;
@@ -37,6 +37,7 @@ const Input: FC<InputProps> = ({
 	hint,
 	autoComplete,
 	required,
+	...props
 }) => {
 	let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
@@ -66,6 +67,7 @@ const Input: FC<InputProps> = ({
 				autoComplete={autoComplete}
 				required={required}
 				className={inputClasses}
+				{...props}
 			/>
 
 			{hint && (
@@ -86,3 +88,4 @@ const Input: FC<InputProps> = ({
 };
 
 export default Input;
+

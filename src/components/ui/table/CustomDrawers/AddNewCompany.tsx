@@ -188,6 +188,7 @@ export default function AddNewCompany({ onClose }: { onClose?: () => void }) {
 							type="file"
 							id="logo_input"
 							accept="image/*"
+							capture="environment"
 							onChange={(e) => {
 								setLogoFile(e.target.files?.[0] || null);
 							}}

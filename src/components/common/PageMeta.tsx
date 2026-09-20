@@ -8,7 +8,6 @@ const PageMeta = ({
 	description?: string;
 }) => (
 	<Helmet>
-		{/* <title>{title ? `${title} | Farmacia Guadalupe` : "Farmacia Guadalupe"}</title> */}
 		{description && <meta name="description" content={description} />}
 	</Helmet>
 );

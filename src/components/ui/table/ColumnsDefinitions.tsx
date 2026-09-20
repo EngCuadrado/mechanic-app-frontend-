@@ -1057,8 +1057,11 @@ export const useVehicleColumns = () => {
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             VIN: {row.original.vin || "N/A"}
                         </span>
+						<span className="text-sm text-gray-500 dark:text-gray-400">
+                            # Chasis: {row.original.chassisNumber || "N/A"}
+                        </span>
                         <span className="text-xs text-gray-400 dark:text-gray-500">
-                            Año: {row.original.year || "N/A"} | Milaje: {row.original.currentMilage || 0}
+                            Año: {row.original.year || "N/A"} | Kilometraje: {(row.original.currentMilage || 0).toLocaleString()}
                         </span>
                     </div>
                 ),
@@ -1113,6 +1116,7 @@ export const useVehicleColumns = () => {
     );
     return columns;
 };
+
 
 
 

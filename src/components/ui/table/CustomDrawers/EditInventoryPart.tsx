@@ -140,7 +140,7 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 				{/* Min Stock */}
 				<div className="col-span-1">
 					<Label htmlFor="minStockAlert_input">
-						<FormattedMessage id="minStockAlert" defaultMessage="Alerta Mínima" />
+						<FormattedMessage id="minStockAlert" defaultMessage="Alerta Mï¿½nima" />
 					</Label>
 					<div className="relative mt-1">
 						<Input
@@ -267,6 +267,7 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 							type="file"
 							id="image_input"
 							accept="image/*"
+							capture="environment"
 							onChange={(e) => {
 								setImageFile(e.target.files?.[0] || null);
 							}}
