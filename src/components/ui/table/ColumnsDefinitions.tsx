@@ -1,5 +1,6 @@
 ﻿import { useMemo } from "react";
-import { Avatar } from "@mui/material";
+import { Blobatar } from "@blobatar/react";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { useIntl } from "react-intl";
 
@@ -124,11 +125,9 @@ export const useEmployeeColumns = () => {
 				id: "names",
 				cell: ({ row }) => (
 					<div className="flex items-center gap-3">
-						<Avatar
-							{...stringAvatar({
-								name: row.original.names,
-								size: 30,
-							})}
+						<Blobatar
+							name={row.original.names}
+							animate="always"
 						/>
 						<span className="text-sm font-medium">
 							{row.original.names} {row.original.lastnames}

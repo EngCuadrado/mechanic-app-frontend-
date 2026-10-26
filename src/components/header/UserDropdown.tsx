@@ -3,7 +3,6 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { Link } from "react-router";
 
-import { Avatar } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 import { stringAvatar } from "../../utils/AvatarUtils";
 
@@ -11,6 +10,8 @@ import Badge from "../../components/ui/badge/Badge";
 import { FormattedMessage } from "react-intl";
 
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+
+import { Blobatar } from "@blobatar/react";
 
 export default function UserDropdown() {
 	const user = useAuth();
@@ -35,7 +36,13 @@ export default function UserDropdown() {
 			>
 				<span className="mr-3 overflow-hidden rounded-full h-11 w-11">
 					{/* <img src="/images/user/owner.jpg" alt="User" /> */}
-					<Avatar {...stringAvatar({ name: names })} />
+					{/* <Avatar {...stringAvatar({ name: names })} /> */}
+					
+					<Blobatar
+						name={names}
+						animate="always"
+					/>
+
 				</span>
 
 				<ChevronDownIcon
@@ -59,7 +66,11 @@ export default function UserDropdown() {
 							className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm cursor-default dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
 						>
 							<div className="flex flex-row items-center gap-2">
-								<Avatar {...stringAvatar({ name: names })} />
+								<Blobatar
+									name={names}
+									animate="always"
+									size={44}
+								/>
 								<div>
 									<span className="ml-2 capitalize block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
 										{fullName}

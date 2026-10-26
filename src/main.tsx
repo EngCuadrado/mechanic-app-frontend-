@@ -16,6 +16,8 @@ import { AppWrapper } from "./components/common/PageMeta.tsx";
 
 import { setContext } from "@apollo/client/link/context";
 
+import "blobatar/motion.css";
+
 const baseUrl = import.meta.env.VITE_BASE_API_URL;
 
 const authLink = setContext((_, { headers }) => {

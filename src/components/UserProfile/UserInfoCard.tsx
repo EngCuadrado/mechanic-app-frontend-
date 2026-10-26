@@ -1,5 +1,5 @@
 import { FormattedMessage, useIntl } from "react-intl";
-import { Avatar } from "@mui/material";
+import { Blobatar } from "@blobatar/react";
 import { useState } from "react";
 import { useQuery } from "@apollo/client/react";
 
@@ -62,8 +62,9 @@ export default function UserInfoCard() {
 
 					<div className="flex flex-col flex-row items-center justify-between">
 						<div className="flex flex-col items-center w-full gap-6 xl:flex-row">
-							<Avatar
-								{...stringAvatar({ name: names, size: 60 })}
+							<Blobatar
+								name={names}
+								animate="always"
 							/>
 
 							<div>
