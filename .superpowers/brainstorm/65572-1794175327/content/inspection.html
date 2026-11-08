@@ -1,0 +1,54 @@
+<h2>Inspección de entrada (obligatoria)</h2>
+<p class="subtitle">Una categoría por pantalla. Los ítems empiezan vacíos; "Todo bien" los marca de una vez. Firmar solo se habilita al completar todo.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Pantalla 1 · Datos del vehículo</div>
+    <div class="mockup-body">
+      <div class="label">Inspección 1 de 4 · Datos</div>
+      <div style="display:flex;gap:4px;margin:6px 0 14px"><div style="flex:1;height:6px;background:#2563eb;border-radius:3px"></div><div style="flex:1;height:6px;background:#ddd;border-radius:3px"></div><div style="flex:1;height:6px;background:#ddd;border-radius:3px"></div><div style="flex:1;height:6px;background:#ddd;border-radius:3px"></div></div>
+      <div class="label">Kilometraje *</div>
+      <input class="mock-input" placeholder="123456" style="font-size:22px;padding:14px;text-align:center">
+      <div class="label" style="margin-top:14px">Combustible *</div>
+      <div style="display:flex;gap:6px;margin:6px 0">
+        <span class="mock-button" style="flex:1;padding:14px 0;text-align:center">E</span>
+        <span class="mock-button" style="flex:1;padding:14px 0;text-align:center">¼</span>
+        <span class="mock-button" style="flex:1;padding:14px 0;text-align:center">½</span>
+        <span class="mock-button" style="flex:1;padding:14px 0;text-align:center;background:#2563eb;color:#fff">¾</span>
+        <span class="mock-button" style="flex:1;padding:14px 0;text-align:center">F</span>
+      </div>
+      <div class="label" style="margin-top:14px">Objetos dentro del carro</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:6px 0">
+        <span class="mock-button" style="padding:10px 14px">Nada</span>
+        <span class="mock-button" style="padding:10px 14px">Herramientas</span>
+        <span class="mock-button" style="padding:10px 14px">Llanta repuesto</span>
+        <span class="mock-button" style="padding:10px 14px">✏️ Otro</span>
+      </div>
+      <button class="mock-button" style="width:100%;padding:14px;margin-top:10px">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Pantalla 2 · Carrocería (con "Todo bien")</div>
+    <div class="mockup-body">
+      <div class="label">Inspección 2 de 4 · Carrocería</div>
+      <div style="display:flex;gap:4px;margin:6px 0 14px"><div style="flex:1;height:6px;background:#2563eb;border-radius:3px"></div><div style="flex:1;height:6px;background:#2563eb;border-radius:3px"></div><div style="flex:1;height:6px;background:#ddd;border-radius:3px"></div><div style="flex:1;height:6px;background:#ddd;border-radius:3px"></div></div>
+      <button class="mock-button" style="width:100%;padding:14px;background:#16a34a;color:#fff">✔ Todo bien en esta sección</button>
+      <p class="subtitle" style="margin:10px 0 4px">…o marca cada parte:</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ddd"><span>Frente</span><span style="display:flex;gap:6px"><span class="mock-button" style="padding:8px 12px;background:#16a34a;color:#fff">✔ Bien</span><span class="mock-button" style="padding:8px 12px">⚠ Daño</span></span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #ddd"><span>Lado izq.</span><span style="display:flex;gap:6px"><span class="mock-button" style="padding:8px 12px">✔ Bien</span><span class="mock-button" style="padding:8px 12px;background:#dc2626;color:#fff">⚠ Daño</span></span></div>
+      <div class="placeholder" style="margin:6px 0;padding:8px">📷 Foto del daño (obligatoria) · ✏️ Nota</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><span>Lado der.</span><span style="display:flex;gap:6px"><span class="mock-button" style="padding:8px 12px">✔ Bien</span><span class="mock-button" style="padding:8px 12px">⚠ Daño</span></span></div>
+      <button class="mock-button" style="width:100%;padding:14px;margin-top:6px;opacity:.5">Siguiente (faltan 1) →</button>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top:16px">
+  <div class="mockup-header">Pantalla final · Firma</div>
+  <div class="mockup-body">
+    <p><b>Resumen:</b> Km 123,456 · Combustible ¾ · 1 daño (lado izq.) · 4 fotos</p>
+    <div class="placeholder" style="padding:30px">✍ Firma del cliente aquí</div>
+    <button class="mock-button" style="width:100%;padding:14px;margin-top:8px">Recibir vehículo</button>
+  </div>
+</div>

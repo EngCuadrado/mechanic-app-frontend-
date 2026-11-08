@@ -10,9 +10,13 @@ export interface WorkOrderSummary {
 	type: string;
 	currentStatus: string;
 	entryTimestamp: string;
+	reportedIssue?: string | null;
 	totalBilledPrice: number | null;
+	dropoffSignatureUrl: string | null;
+	services: { description: string | null }[];
 	vehicle?: VehicleLite | null;
 	company?: { name: string | null } | null;
+	assignedMechanics?: { mechanicId: number; firstName: string | null; lastName: string | null }[];
 }
 
 export interface WorkOrderPart {

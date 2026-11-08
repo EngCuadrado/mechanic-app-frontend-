@@ -9,11 +9,25 @@ export const GET_WORK_ORDERS = gql`
 				type
 				currentStatus
 				entryTimestamp
+				reportedIssue
 				totalBilledPrice
+				dropoffSignatureUrl
 				vehicle { vehicleId plate model { modelName brand { brandName } } }
 				company { name }
+				services { description }
+				assignedMechanics { mechanicId firstName lastName }
 			}
 			pageInfo { hasNextPage endCursor }
+		}
+	}
+`;
+
+// Una fila por cada estado (con 0 incluido), calculada en la base de datos.
+export const GET_WORK_ORDER_STATUS_COUNTS = gql`
+	query GetWorkOrderStatusCounts {
+		workOrderStatusCounts {
+			status
+			count
 		}
 	}
 `;

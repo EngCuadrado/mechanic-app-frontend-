@@ -1,0 +1,51 @@
+<h2>Recepción: ¿cómo se ve el ingreso de un carro?</h2>
+<p class="subtitle">Teléfono. Hora y "atendido por" se llenan solos (hora actual + usuario con sesión). Tú solo tocas lo necesario.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">A · Pasos cortos (una cosa por pantalla)</div>
+    <div class="mockup-body">
+      <div class="label">Paso 1 de 3 · Vehículo</div>
+      <div style="height:6px;background:#ddd;border-radius:3px;margin:6px 0 14px"><div style="width:33%;height:6px;background:#2563eb;border-radius:3px"></div></div>
+      <input class="mock-input" placeholder="🔍 Placa (ej. P123ABC)" style="font-size:20px;padding:14px">
+      <div class="placeholder" style="margin:10px 0;padding:10px">Toyota Hilux 2019 · Empresa X ✔<br><small>o + Vehículo nuevo</small></div>
+      <div class="label" style="margin-top:14px">Motivo (toca uno o escribe)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0">
+        <span class="mock-button" style="padding:10px 14px">Servicio</span>
+        <span class="mock-button" style="padding:10px 14px">Frenos</span>
+        <span class="mock-button" style="padding:10px 14px">Ruido</span>
+        <span class="mock-button" style="padding:10px 14px">Eléctrico</span>
+        <span class="mock-button" style="padding:10px 14px">Otro…</span>
+      </div>
+      <p class="subtitle">Paso 2: quién lo trae + inspección rápida con fotos<br>Paso 3: firma del cliente → Recibir</p>
+      <button class="mock-button" style="width:100%;padding:14px;margin-top:8px">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">B · Una sola pantalla compacta</div>
+    <div class="mockup-body">
+      <input class="mock-input" placeholder="🔍 Placa" style="font-size:20px;padding:14px">
+      <div class="placeholder" style="margin:8px 0;padding:8px">Toyota Hilux 2019 ✔</div>
+      <div class="label">Motivo</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0">
+        <span class="mock-button" style="padding:8px 12px">Servicio</span>
+        <span class="mock-button" style="padding:8px 12px">Frenos</span>
+        <span class="mock-button" style="padding:8px 12px">Otro…</span>
+      </div>
+      <div class="label">Lo trae</div>
+      <input class="mock-input" placeholder="👤 Nombre / chofer">
+      <div style="display:flex;gap:8px;margin:10px 0">
+        <span class="mock-button" style="flex:1;padding:12px">📷 Fotos</span>
+        <span class="mock-button" style="flex:1;padding:12px">✍ Firma</span>
+      </div>
+      <button class="mock-button" style="width:100%;padding:14px">Recibir vehículo</button>
+      <p class="subtitle" style="margin-top:8px">Todo cabe en una pantalla, sin scroll largo; foto y firma abren un panel.</p>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:20px">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)"><div class="letter">A</div><div class="content"><h3>Pasos cortos</h3><p>Más guiado, ideal para gente nueva o con guantes; 3 toques de "siguiente".</p></div></div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)"><div class="letter">B</div><div class="content"><h3>Una pantalla</h3><p>Más rápido para quien ya sabe; menos guiado.</p></div></div>
+</div>

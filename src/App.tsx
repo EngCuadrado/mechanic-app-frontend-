@@ -36,7 +36,7 @@ import Inventory from "./pages/Tables/Inventory";
 import { MovementsPage } from "./features/inventory";
 import { InspectionPage } from "./features/inspections";
 import { RentalsPage } from "./features/rentals";
-import { WorkOrdersPage, WorkOrderDetailPage } from "./features/work-orders";
+import { WorkOrdersPage, WorkOrderDetailPage, ReceptionPage, DeliveryPage } from "./features/work-orders";
 import Vehicles from "./pages/Tables/Vehicles";
 
 export default function App() {
@@ -92,6 +92,9 @@ export default function App() {
 								<Route path="/ordenes/:id/inspecciones/:inspectionId" element={<InspectionPage />} />
 								<Route path="/alquileres" element={<RentalsPage />} />
 								<Route path="/ordenes" element={<WorkOrdersPage />} />
+								<Route path="/ordenes/recibir" element={<ReceptionPage />} />
+								<Route path="/ordenes/:id/recibir" element={<ReceptionPage />} />
+								<Route path="/ordenes/:id/entregar" element={<DeliveryPage />} />
 								<Route path="/ordenes/:id" element={<WorkOrderDetailPage />} />
 
 								<Route

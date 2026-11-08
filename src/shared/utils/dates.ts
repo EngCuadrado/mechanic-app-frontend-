@@ -28,3 +28,22 @@ export function dayStartUtc(day: string): string {
 export function dayEndUtc(day: string): string {
 	return dayjs.tz(day, "America/Managua").endOf("day").utc().toISOString();
 }
+
+/** Minutos desde `value` hasta ahora; nunca negativo (fechas del backend sin zona o adelantadas). */
+export function elapsedMinutes(value?: string | null, now: dayjs.Dayjs = dayjs.utc()): number {
+	const d = parseServerDate(value);
+	return d ? Math.max(0, now.diff(d, "minute")) : 0;
+}
+
+/** 45 → "45 min", 130 → "2 h 10 min", 1500 → "1 d 1 h". */
+export function formatElapsed(minutes: number): string {
+	if (minutes < 60) return `${minutes} min`;
+	if (minutes < 1440) return `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+	return `${Math.floor(minutes / 1440)} d ${Math.floor((minutes % 1440) / 60)} h`;
+}
+
+/** "hace 3 horas". Depende de que parseServerDate interprete bien la zona del backend. */
+export function timeAgo(value?: string | null): string {
+	const d = parseServerDate(value);
+	return d ? d.fromNow() : "—";
+}

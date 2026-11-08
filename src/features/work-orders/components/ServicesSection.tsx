@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { CheckIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import BottomSheet from "../../../shared/components/BottomSheet";
+import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import IconButton from "../../../shared/components/IconButton";
 import { useApiMutation } from "../../../shared/hooks/useApiMutation";
-import { formatMoney, toNumber } from "../../../shared/utils/format";
-import Input from "../../../components/form/input/InputField";
-import Label from "../../../components/form/Label";
-import { AGREGAR_SERVICIO, QUITAR_SERVICIO } from "../api/itemMutations";
+import { formatMoney } from "../../../shared/utils/format";
+import { AGREGAR_SERVICIO, EDITAR_SERVICIO, QUITAR_SERVICIO } from "../api/itemMutations";
 import type { WorkOrderService } from "../types";
+import ServiceSheet, { mechanicName, type ServiceValues } from "./ServiceSheet";
 
 interface Props {
 	workOrderId: number;
@@ -16,32 +14,32 @@ interface Props {
 	canEdit: boolean;
 }
 
-const REFETCH = { refetchQueries: ["GetWorkOrder"] };
+const REFETCH = { refetchQueries: ["GetWorkOrder", "GetWorkOrders"] };
 
 export default function ServicesSection({ workOrderId, services, canEdit }: Props) {
 	const intl = useIntl();
-	const [open, setOpen] = useState(false);
-	const [description, setDescription] = useState("");
-	const [internalCost, setInternalCost] = useState("");
-	const [price, setPrice] = useState("");
+	// null = cerrado; "new" = crear; un servicio = editar ese.
+	const [sheet, setSheet] = useState<"new" | WorkOrderService | null>(null);
 	const [add, adding] = useApiMutation(AGREGAR_SERVICIO, REFETCH);
+	const [edit, editing] = useApiMutation(EDITAR_SERVICIO, REFETCH);
 	const [remove, removing] = useApiMutation(QUITAR_SERVICIO, REFETCH);
 
-	const valid = description.trim() !== "" && toNumber(internalCost) !== null && toNumber(price) !== null;
+	const editing_ = sheet !== null && sheet !== "new" ? sheet : null;
+	const initial: ServiceValues | undefined = editing_
+		? {
+				description: editing_.description ?? "",
+				internalCost: editing_.internalCost ?? 0,
+				price: editing_.price ?? 0,
+				mechanic: editing_.mechanicId ? { mechanicId: editing_.mechanicId, ...editing_.mechanic! } : null,
+			}
+		: undefined;
 
-	const submit = async () => {
-		const ok = await add({
-			workOrderId,
-			description: description.trim(),
-			internalCost: toNumber(internalCost),
-			price: toNumber(price),
-		});
-		if (ok) {
-			setOpen(false);
-			setDescription("");
-			setInternalCost("");
-			setPrice("");
-		}
+	const submit = async (v: ServiceValues) => {
+		const base = { description: v.description, internalCost: v.internalCost, price: v.price, mechanicId: v.mechanic?.mechanicId ?? null };
+		const ok = editing_
+			? await edit({ workOrderServiceId: editing_.workOrderServiceId, ...base })
+			: await add({ workOrderId, ...base });
+		if (ok) setSheet(null);
 	};
 
 	return (
@@ -52,10 +50,11 @@ export default function ServicesSection({ workOrderId, services, canEdit }: Prop
 				</h2>
 				{canEdit && (
 					<IconButton
-						variant="outline"
+						variant="primary"
+						showLabel
 						icon={<PlusIcon className="size-5" />}
 						label={intl.formatMessage({ id: "workOrder.addService", defaultMessage: "Agregar servicio" })}
-						onClick={() => setOpen(true)}
+						onClick={() => setSheet("new")}
 					/>
 				)}
 			</div>
@@ -65,52 +64,39 @@ export default function ServicesSection({ workOrderId, services, canEdit }: Prop
 						<div className="min-w-0">
 							<p className="truncate text-sm font-medium text-gray-800 dark:text-white/90">{s.description}</p>
 							<p className="text-xs text-gray-500 dark:text-gray-400">
-								{[s.mechanic && `${s.mechanic.firstName ?? ""} ${s.mechanic.lastName ?? ""}`.trim(), formatMoney(s.price)]
-									.filter(Boolean)
-									.join(" · ")}
+								{[
+									s.mechanic
+										? mechanicName({ mechanicId: s.mechanicId!, ...s.mechanic })
+										: intl.formatMessage({ id: "workOrder.noMechanic", defaultMessage: "Sin mecánico" }),
+									formatMoney(s.price),
+								].join(" · ")}
 							</p>
 						</div>
 						{canEdit && (
-							<IconButton
-								disabled={removing}
-								icon={<TrashIcon className="size-5 text-red-600" />}
-								label={intl.formatMessage({ id: "common.remove", defaultMessage: "Quitar" })}
-								onClick={() => remove({ workOrderServiceId: s.workOrderServiceId })}
-							/>
+							<div className="flex items-center gap-1">
+								<IconButton
+									icon={<PencilSquareIcon className="size-5" />}
+									label={intl.formatMessage({ id: "common.edit", defaultMessage: "Editar" })}
+									onClick={() => setSheet(s)}
+								/>
+								<IconButton
+									disabled={removing}
+									icon={<TrashIcon className="size-5 text-red-600" />}
+									label={intl.formatMessage({ id: "common.remove", defaultMessage: "Quitar" })}
+									onClick={() => remove({ workOrderServiceId: s.workOrderServiceId })}
+								/>
+							</div>
 						)}
 					</li>
 				))}
 			</ul>
-			<BottomSheet
-				isOpen={open}
-				onClose={() => setOpen(false)}
-				title={intl.formatMessage({ id: "workOrder.addService", defaultMessage: "Agregar servicio" })}
-			>
-				<div className="flex flex-col gap-4">
-					<div>
-						<Label htmlFor="svc-desc">{intl.formatMessage({ id: "workOrder.serviceDescription", defaultMessage: "Descripción" })}</Label>
-						<Input id="svc-desc" value={description} onChange={(e) => setDescription(e.target.value)} />
-					</div>
-					<div className="grid grid-cols-2 gap-3">
-						<div>
-							<Label htmlFor="svc-cost">{intl.formatMessage({ id: "workOrder.internalCost", defaultMessage: "Costo" })}</Label>
-							<Input id="svc-cost" type="number" inputMode="decimal" value={internalCost} onChange={(e) => setInternalCost(e.target.value)} />
-						</div>
-						<div>
-							<Label htmlFor="svc-price">{intl.formatMessage({ id: "workOrder.price", defaultMessage: "Precio" })}</Label>
-							<Input id="svc-price" type="number" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} />
-						</div>
-					</div>
-					<IconButton
-						variant="primary"
-						showLabel
-						disabled={!valid || adding}
-						icon={<CheckIcon className="size-5" />}
-						label={intl.formatMessage({ id: "common.save", defaultMessage: "Guardar" })}
-						onClick={submit}
-					/>
-				</div>
-			</BottomSheet>
+			<ServiceSheet
+				isOpen={sheet !== null}
+				onClose={() => setSheet(null)}
+				initialValues={initial}
+				saving={adding || editing}
+				onSubmit={submit}
+			/>
 		</section>
 	);
 }

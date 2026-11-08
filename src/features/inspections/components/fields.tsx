@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import Input from "../../../components/form/input/InputField";
+import TextArea from "../../../components/form/input/TextArea";
+import ChoiceChips from "../../../shared/components/ChoiceChips";
 import type { ChecklistItem } from "../types";
 
 export interface FieldProps {
@@ -36,29 +38,24 @@ function CheckboxField({ item, value, onChange, disabled }: FieldProps) {
 /** select y radio: botones grandes para elegir con el pulgar, sin escribir. */
 function ChoiceField({ item, value, onChange, disabled }: FieldProps) {
 	return (
-		<div className="flex flex-wrap gap-2" role="radiogroup" aria-label={item.name}>
-			{(item.options ?? []).map((o) => (
-				<button
-					key={o}
-					type="button"
-					role="radio"
-					aria-checked={value === o}
-					disabled={disabled}
-					onClick={() => onChange(o)}
-					className={`min-h-11 cursor-pointer rounded-full border px-4 text-sm font-medium disabled:opacity-50 ${
-						value === o ? "border-brand-500 bg-brand-500 text-white" : "border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300"
-					}`}
-				>
-					{o}
-				</button>
-			))}
-		</div>
+		<ChoiceChips
+			ariaLabel={item.name}
+			disabled={disabled}
+			value={value || null}
+			onChange={onChange}
+			options={(item.options ?? []).map((o) => ({ value: o, label: o }))}
+		/>
 	);
+}
+
+function TextareaField({ value, onChange, disabled }: FieldProps) {
+	return <TextArea rows={2} value={value} disabled={disabled} onChange={onChange} />;
 }
 
 /** Registro por tipo de input del checklist: agregar un tipo = agregar una entrada, sin cadenas de if/switch. */
 export const FIELD_REGISTRY: Record<string, (p: FieldProps) => ReactNode> = {
 	text: inputField("text"),
+	textarea: TextareaField,
 	number: inputField("number", "decimal"),
 	date: inputField("date"),
 	checkbox: CheckboxField,

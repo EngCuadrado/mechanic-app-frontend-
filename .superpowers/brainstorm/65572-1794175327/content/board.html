@@ -1,0 +1,44 @@
+<h2>Tablero del taller</h2>
+<p class="subtitle">Cada tarjeta: placa, modelo, servicios, tiempo, mecánico y botón para avanzar al siguiente estado.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Teléfono · una columna a la vez</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:4px;margin-bottom:12px;font-size:13px">
+        <span class="mock-button" style="flex:1;padding:8px 0;text-align:center">Recibido 3</span>
+        <span class="mock-button" style="flex:1;padding:8px 0;text-align:center;background:#2563eb;color:#fff">En proceso 4</span>
+        <span class="mock-button" style="flex:1;padding:8px 0;text-align:center">Listo 2</span>
+        <span class="mock-button" style="flex:1;padding:8px 0;text-align:center">Entreg. 1</span>
+      </div>
+      <div class="placeholder" style="padding:12px;text-align:left;margin-bottom:10px">
+        <b style="font-size:18px">P123ABC</b> · Hilux 2019<br>
+        <span style="font-size:13px">🔧 Cambio de aceite · Frenos</span><br>
+        <span style="font-size:13px">⏱ 2 h 10 min &nbsp; 👤 Carlos</span>
+        <button class="mock-button" style="width:100%;padding:12px;margin-top:8px">✔ Marcar Listo →</button>
+      </div>
+      <div class="placeholder" style="padding:12px;text-align:left;margin-bottom:10px;border-left:4px solid #dc2626">
+        <b style="font-size:18px">M456XYZ</b> · Corolla 2017<br>
+        <span style="font-size:13px">🔧 Alineación</span><br>
+        <span style="font-size:13px;color:#dc2626">⏱ 6 h 40 min (atrasado) &nbsp; 👤 Luis</span>
+        <button class="mock-button" style="width:100%;padding:12px;margin-top:8px">✔ Marcar Listo →</button>
+      </div>
+      <div class="placeholder" style="padding:12px;text-align:left">
+        <b style="font-size:18px">C789QWE</b> · NP300<br>
+        <span style="font-size:13px">🔧 Sin servicios aún</span> · <span style="font-size:13px">👤 Sin asignar</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Tableta · 4 columnas juntas</div>
+    <div class="mockup-body" style="display:flex;gap:6px;font-size:11px">
+      <div style="flex:1"><div class="label">Recibido 3</div><div class="placeholder" style="padding:6px;margin-top:6px">P111AAA<br>Hilux · 20 min<br><i>Sin asignar</i><br>[Iniciar →]</div></div>
+      <div style="flex:1"><div class="label">En proceso 4</div><div class="placeholder" style="padding:6px;margin-top:6px">P123ABC<br>Aceite, frenos<br>2 h · Carlos<br>[Listo →]</div><div class="placeholder" style="padding:6px;margin-top:6px;border-left:3px solid #dc2626">M456XYZ<br>Alineación<br>6 h · Luis</div></div>
+      <div style="flex:1"><div class="label">Listo 2</div><div class="placeholder" style="padding:6px;margin-top:6px">T222BBB<br>Servicio · 5 h<br>[Entregar →]</div></div>
+      <div style="flex:1"><div class="label">Entregado hoy 1</div><div class="placeholder" style="padding:6px;margin-top:6px">B333CCC<br>Cerrado</div></div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:14px">Tocar la tarjeta abre el detalle de la orden. "Entregar" pide confirmación breve y la firma de salida.</p>

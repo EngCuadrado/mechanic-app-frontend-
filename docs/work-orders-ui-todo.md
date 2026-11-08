@@ -141,3 +141,16 @@ src/
 | Sin conexión | ¿El taller tiene señal estable? Si no, habría que guardar borradores en el dispositivo (más trabajo; hoy no está en el plan). |
 | Dispositivos | ¿Qué modelos de teléfono/tableta y navegador se usan? Define los tamaños de prueba y si la cámara funciona con `capture`. |
 | Código viejo de farmacia | `Medicines`, `Suppliers`, `Sales`… son del template original; ¿se eliminan en otra tarea? |
+
+---
+
+## Flujo de recepción y entrega (2026-11-08)
+Diseño: [`superpowers/specs/2026-11-08-work-orders-redesign-design.md`](./superpowers/specs/2026-11-08-work-orders-redesign-design.md) ·
+Plan: [`superpowers/plans/2026-11-08-work-orders-redesign.md`](./superpowers/plans/2026-11-08-work-orders-redesign.md).
+- [x] Recepción por pasos en `/ordenes/recibir` (vehículo y motivo de lista fija → inspección de entrada → firma); retomar en `/ordenes/:id/recibir`.
+- [x] Entrega por pasos en `/ordenes/:id/entregar` (inspección de salida → quien recoge y firma → `Entregado`).
+- [x] Checklist dinámico: una categoría por paso, obligatorios validados con `validarCompletitud`; sí/no como switch (empieza en "No").
+- [x] Tablero con servicios, tiempo transcurrido, atrasadas (`OVERDUE_MINUTES`) y recepción incompleta.
+- [x] Servicios elegidos de un catálogo fijo (`SERVICE_CATALOG`); motivos fijos (`ORDER_REASONS`), en `features/work-orders/constants.ts`.
+- [ ] Pendiente backend: exigir inspección y firma al cambiar de estado (hoy solo lo aplica la UI).
+- [ ] Probar en navegador (390 px y 820 px, claro y oscuro) y con el backend real; `npm run lint` no corre porque el repo no tiene `eslint.config.js`.

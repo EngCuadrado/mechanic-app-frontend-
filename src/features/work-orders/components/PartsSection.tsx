@@ -6,9 +6,8 @@ import EntityPicker from "../../../shared/components/EntityPicker";
 import IconButton from "../../../shared/components/IconButton";
 import QuantityStepper from "../../../shared/components/QuantityStepper";
 import { SEARCH_PARTS } from "../../../shared/api/pickers";
-import { useApiMutation } from "../../../shared/hooks/useApiMutation";
 import { formatMoney } from "../../../shared/utils/format";
-import { AGREGAR_REPUESTO, EDITAR_REPUESTO, QUITAR_REPUESTO } from "../api/itemMutations";
+import { usePartsDraft } from "../hooks/usePartsDraft";
 import type { WorkOrderPart } from "../types";
 
 interface Props {
@@ -27,60 +26,56 @@ interface PickedPart {
 	basePrice: number | null;
 }
 
-const REFETCH = { refetchQueries: ["GetWorkOrder"] };
-
 export default function PartsSection({ workOrderId, parts, canAdd, canEdit, canRemove }: Props) {
 	const intl = useIntl();
 	const [picking, setPicking] = useState(false);
-	const [add, adding] = useApiMutation(AGREGAR_REPUESTO, REFETCH);
-	const [edit, editing] = useApiMutation(EDITAR_REPUESTO, REFETCH);
-	const [remove, removing] = useApiMutation(QUITAR_REPUESTO, REFETCH);
-	const busy = adding || editing || removing;
+	const { rows, add, setQuantity, remove, saving, pending } = usePartsDraft(workOrderId, parts);
 
-	const pick = async (p: PickedPart) => {
-		const ok = await add({ workOrderId, partId: p.inventoryPartId, quantity: 1 });
-		if (ok) setPicking(false);
+	const pick = (p: PickedPart) => {
+		add({ partId: p.inventoryPartId, name: p.name, unitPrice: p.basePrice });
+		setPicking(false);
 	};
 
 	return (
 		<section className="rounded-2xl border border-gray-200 p-4 dark:border-gray-800">
-			<div className="mb-3 flex items-center justify-between">
+			<div className="mb-3 flex items-center justify-between gap-3">
 				<h2 className="font-semibold text-gray-800 dark:text-white/90">
 					{intl.formatMessage({ id: "workOrder.parts", defaultMessage: "Repuestos" })}
 				</h2>
-				{canAdd && (
-					<IconButton
-						variant="outline"
-						icon={<PlusIcon className="size-5" />}
-						label={intl.formatMessage({ id: "workOrder.addPart", defaultMessage: "Agregar repuesto" })}
-						onClick={() => setPicking(true)}
-					/>
-				)}
+				<div className="flex items-center gap-3">
+					{(saving || pending) && (
+						<span role="status" className="text-xs text-gray-500 dark:text-gray-400">
+							{intl.formatMessage({ id: "common.saving", defaultMessage: "Guardando…" })}
+						</span>
+					)}
+					{canAdd && (
+						<IconButton
+							variant="primary"
+							showLabel
+							icon={<PlusIcon className="size-5" />}
+							label={intl.formatMessage({ id: "workOrder.addPart", defaultMessage: "Agregar repuesto" })}
+							onClick={() => setPicking(true)}
+						/>
+					)}
+				</div>
 			</div>
 			<ul className="flex flex-col gap-3">
-				{parts.map((p) => (
-					<li key={p.workOrderPartId} className="flex items-center justify-between gap-3">
+				{rows.map((r) => (
+					<li key={r.key} className="flex items-center justify-between gap-3">
 						<div className="min-w-0">
-							<p className="truncate text-sm font-medium text-gray-800 dark:text-white/90">{p.part?.name}</p>
+							<p className="truncate text-sm font-medium text-gray-800 dark:text-white/90">{r.name}</p>
 							<p className="text-xs text-gray-500 dark:text-gray-400">
-								{formatMoney(p.unitPrice)} × {p.quantity}
+								{formatMoney(r.unitPrice)} × {r.quantity}
 							</p>
 						</div>
 						<div className="flex items-center gap-1">
-							{canEdit && (
-								<QuantityStepper
-									value={p.quantity}
-									disabled={busy}
-									onChange={(q) => edit({ workOrderPartId: p.workOrderPartId, quantity: q })}
-								/>
-							)}
+							{canEdit && <QuantityStepper value={r.quantity} onChange={(q) => setQuantity(r.key, q)} />}
 							{canRemove && (
 								<IconButton
 									variant="ghost"
-									disabled={busy}
 									icon={<TrashIcon className="size-5 text-red-600" />}
 									label={intl.formatMessage({ id: "common.remove", defaultMessage: "Quitar" })}
-									onClick={() => remove({ workOrderPartId: p.workOrderPartId })}
+									onClick={() => remove(r.key)}
 								/>
 							)}
 						</div>

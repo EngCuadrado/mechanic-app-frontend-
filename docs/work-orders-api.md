@@ -76,14 +76,27 @@ Datos generales: `reportedIssue`, `notes`, nombres de choferes, URLs de firmas. 
 ```graphql
 query($where: WorkOrderFilterInput, $first: Int, $after: String) {
   workOrders(where: $where, first: $first, after: $after) {
-    nodes { workOrderId type currentStatus entryTimestamp totalBilledPrice
-            vehicle { plate model { modelName brand { brandName } } } company { name } }
+    nodes { workOrderId type currentStatus entryTimestamp reportedIssue totalBilledPrice
+            vehicle { plate model { modelName brand { brandName } } } company { name }
+            assignedMechanics { mechanicId firstName lastName } }
     pageInfo { hasNextPage endCursor }
   }
 }
 ```
 Variables: `{ "first": 20, "where": { "currentStatus": { "eq": "En proceso" } } }`. Filtros: estado, tipo, vehículo, empresa, rango
 de fechas. Orden: más recientes primero.
+
+`assignedMechanics`: mecánicos de los servicios de la orden, sin repetidos (DataLoader, sin N+1). Filtro por placa ✅
+probado: `where: { vehicle: { plate: { contains: "ZZ" } } }`, combinable con `currentStatus`.
+
+### `workOrderStatusCounts` ✅
+`{ workOrderStatusCounts { status count } }` → una fila por estado (Recibido, En proceso, Listo, Entregado, Cancelado), con 0
+incluido, calculada con GROUP BY. Argumentos opcionales: `entryFrom`, `entryTo` (con zona, ej. `2020-01-01T00:00:00Z`), `vehicleId`.
+La lista de órdenes lo usa para los contadores del filtro (`GetWorkOrderStatusCounts`).
+
+### `workOrderDashboard(stalledHours: Int = 24)` ✅ (aún sin usar en la UI)
+`{ createdToday readyToDeliver stalled }`. `stalled` cuenta Recibido/En proceso con más de N horas **desde `entryTimestamp`**
+(no hay `statusChangedAt` en la base). `stalledHours <= 0` da error. "Hoy" usa `WorkOrderRules.TimeZoneId` del backend.
 
 ### `workOrder` (detalle) ⚠️
 ```graphql
@@ -191,13 +204,13 @@ query($id: Int) {
 (`["Limpio","Sucio","Requiere lavado profundo"]`) y solo existe en `select` y `radio`. Con `vehicleInspectionId` devuelve además
 los valores ya guardados en `value` y `notes`.
 
-### `crearInspeccion` ⚠️
+### `crearInspeccion` ✅
 Crea la inspección `Entrada` o `Salida` de una orden, con kilometraje, notas y URL del croquis de daños. Si ya existe una de
 ese tipo en la orden: `"La orden ya tiene una inspección de Entrada."` (`INSPECTION_EXISTS`).
 
-### `editarInspeccion` ⚠️ · `vehicleInspection` ⚠️
+### `editarInspeccion` ✅ · `vehicleInspection` ✅
 
-### `guardarResultadosInspeccion` ⚠️
+### `guardarResultadosInspeccion` ✅
 ```graphql
 mutation($id: Int!, $r: [InspectionResultInput!]!) {
   guardarResultadosInspeccion(vehicleInspectionId: $id, results: $r, validarCompletitud: false) {
@@ -214,7 +227,7 @@ todos los ítems activos obligatorios y revierte el lote si falta alguno.
 
 ## Fotos
 
-### `registrarFotoOrden` ⚠️ · `eliminarFotoOrden` ⚠️ · `workOrderPhotos` ⚠️
+### `registrarFotoOrden` ✅ · `eliminarFotoOrden` ✅ · `workOrderPhotos` ✅
 ```graphql
 query { workOrderPhotos(workOrderId: 13) { stage photos { workOrderPhotoId photoUrl category } } }
 ```
@@ -247,10 +260,14 @@ Sin lógica de facturación: solo guardar y leer.
 ## Pendientes conocidos
 - **Sin `[Authorize]`:** las mutations no exigen sesión. Cualquiera con la URL del backend puede crear órdenes, mover stock o
   registrar compras. Conviene exigir login antes de producción.
-- **Horas:** las fechas de la orden salen en UTC y otras en hora local del servidor. Aplazado a propósito.
+- **Horas:** `crearOrden` y `cambiarEstadoOrden` ahora escriben `entryTimestamp`/`exitTimestamp` en `America/Panama` (UTC-5,
+  constante del backend, suposición); el taller está en Managua (UTC-6) y `parseServerDate` trata las fechas sin zona como UTC.
+  Mientras no se unifique (idealmente fechas con zona o `America/Managua`), la antigüedad ("hace 3 h") y las horas mostradas
+  pueden desfasarse. Solo debe cambiar `shared/utils/dates.ts`.
+- **Sin `statusChangedAt`:** no existe la fecha del último cambio de estado; "atrasadas" se mide desde la entrada.
 - **Detalles de error en producción:** hoy `extensions` incluye el `stackTrace`. En producción debe desactivarse.
 - **Nulabilidad:** los modelos del backend marcaban `chassisNumber` como obligatorio aunque la columna acepta `NULL`
   (`crearOrden` falló con un vehículo sin chasis). Se pidió corregir en todos los modelos; confirmar que se hizo.
-- Operaciones ⚠️ sin probar (ver arriba) y el flujo de `photoFile` con Azure Blob.
+- Operaciones ⚠️ sin probar (ver arriba). Inspecciones y fotos (incl. `photoFile` con Azure Blob) las probó el usuario el 2026-11-08.
 - Existen registros de prueba en la base real: repuesto `ZZ-PRUEBA` (id 17) y vehículo `ZZ-0000` (id 69), con órdenes 1
   (cancelada) y 2 (entregada). No se pueden borrar sus movimientos de inventario.

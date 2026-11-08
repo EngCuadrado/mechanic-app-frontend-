@@ -7,10 +7,12 @@ interface Props {
 	/** Recibe la firma como PNG. */
 	onSave: (file: File) => void;
 	saving?: boolean;
+	/** Alto del lienzo (clases Tailwind). */
+	heightClass?: string;
 }
 
 /** Lienzo táctil para firmar con el dedo (pointer events: sirve con dedo, lápiz y mouse). */
-export default function SignaturePad({ onSave, saving }: Props) {
+export default function SignaturePad({ onSave, saving, heightClass = "h-40" }: Props) {
 	const intl = useIntl();
 	const canvas = useRef<HTMLCanvasElement>(null);
 	const drawing = useRef(false);
@@ -68,7 +70,7 @@ export default function SignaturePad({ onSave, saving }: Props) {
 				onPointerDown={start}
 				onPointerMove={move}
 				onPointerUp={() => (drawing.current = false)}
-				className="h-40 w-full touch-none rounded-xl border border-dashed border-gray-400 bg-white"
+				className={`${heightClass} w-full touch-none rounded-xl border border-dashed border-gray-400 bg-white`}
 			/>
 			<div className="flex gap-2">
 				<IconButton

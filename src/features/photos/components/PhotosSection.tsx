@@ -15,13 +15,15 @@ interface Props {
 	canAdd: boolean;
 	/** Solo falso en Entregado: las fotos son evidencia y no se borran. */
 	canDelete: boolean;
+	/** Etapa preseleccionada (Antes, Despues, Otro). */
+	initialStage?: string;
 }
 
 const REFETCH = { refetchQueries: ["GetWorkOrderPhotos"] };
 
-export default function PhotosSection({ workOrderId, canAdd, canDelete }: Props) {
+export default function PhotosSection({ workOrderId, canAdd, canDelete, initialStage = "Antes" }: Props) {
 	const intl = useIntl();
-	const [stage, setStage] = useState<string>("Antes");
+	const [stage, setStage] = useState<string>(initialStage);
 	const [viewing, setViewing] = useState<OrderPhoto | null>(null);
 	const [deleting, setDeleting] = useState<OrderPhoto | null>(null);
 	const camera = useRef<HTMLInputElement>(null);
@@ -42,34 +44,11 @@ export default function PhotosSection({ workOrderId, canAdd, canDelete }: Props)
 
 	return (
 		<section className="rounded-2xl border border-gray-200 p-4 dark:border-gray-800">
-			<div className="mb-3 flex items-center justify-between gap-2">
-				<h2 className="font-semibold text-gray-800 dark:text-white/90">
-					{intl.formatMessage({ id: "photos.title", defaultMessage: "Fotos" })}
-				</h2>
-				{canAdd && (
-					<div className="flex gap-1">
-						<IconButton
-							variant="outline"
-							disabled={uploading}
-							icon={<CameraIcon className="size-5" />}
-							label={intl.formatMessage({ id: "photos.camera", defaultMessage: "Tomar foto" })}
-							onClick={() => camera.current?.click()}
-						/>
-						<IconButton
-							variant="outline"
-							disabled={uploading}
-							icon={<PhotoIcon className="size-5" />}
-							label={intl.formatMessage({ id: "photos.gallery", defaultMessage: "Elegir de la galería" })}
-							onClick={() => gallery.current?.click()}
-						/>
-					</div>
-				)}
-			</div>
 			{canAdd && (
-				<>
+				<div className="mb-4 flex flex-col gap-3">
 					<input ref={camera} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
 					<input ref={gallery} type="file" accept="image/*" multiple hidden onChange={(e) => { onFiles(e.target.files); e.target.value = ""; }} />
-					<div className="mb-3 flex gap-2" role="radiogroup">
+					<div className="grid grid-cols-3 gap-2 rounded-2xl bg-gray-100 p-1 dark:bg-white/[0.05]" role="radiogroup">
 						{PHOTO_STAGES.map((s) => (
 							<button
 								key={s}
@@ -77,20 +56,47 @@ export default function PhotosSection({ workOrderId, canAdd, canDelete }: Props)
 								role="radio"
 								aria-checked={stage === s}
 								onClick={() => setStage(s)}
-								className={`min-h-11 flex-1 cursor-pointer rounded-full border text-sm font-medium ${
-									stage === s ? "border-brand-500 bg-brand-500 text-white" : "border-gray-300 text-gray-700 dark:border-gray-700 dark:text-gray-300"
+								className={`min-h-12 cursor-pointer rounded-xl text-sm font-semibold ${
+									stage === s ? "bg-white text-brand-500 shadow-sm dark:bg-gray-800" : "text-gray-600 dark:text-gray-400"
 								}`}
 							>
-								{label(s)}
+								{label(s)} <span className="font-normal opacity-70">{groups.find((g) => g.stage === s)?.photos.length ?? 0}</span>
 							</button>
 						))}
 					</div>
-				</>
+					<div className="flex gap-2">
+						<IconButton
+							variant="primary"
+							showLabel
+							className="min-h-14 flex-1 text-base"
+							disabled={uploading}
+							icon={<CameraIcon className="size-6" />}
+							label={intl.formatMessage(
+								uploading ? { id: "photos.uploading", defaultMessage: "Subiendo…" } : { id: "photos.camera", defaultMessage: "Tomar foto" },
+							)}
+							onClick={() => camera.current?.click()}
+						/>
+						<IconButton
+							variant="outline"
+							showLabel
+							className="min-h-14"
+							disabled={uploading}
+							icon={<PhotoIcon className="size-6" />}
+							label={intl.formatMessage({ id: "photos.galleryShort", defaultMessage: "Galería" })}
+							onClick={() => gallery.current?.click()}
+						/>
+					</div>
+				</div>
+			)}
+			{groups.length === 0 && (
+				<p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+					{intl.formatMessage({ id: "photos.empty", defaultMessage: "Aún no hay fotos" })}
+				</p>
 			)}
 			{groups.map((g) => (
 				<div key={g.stage} className="mb-3">
 					<p className="mb-1 text-xs font-medium uppercase text-gray-500 dark:text-gray-400">{label(g.stage)}</p>
-					<ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+					<ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
 						{g.photos.map((p) => (
 							<li key={p.workOrderPhotoId} className="relative">
 								<button type="button" onClick={() => setViewing(p)} className="block aspect-square w-full cursor-pointer overflow-hidden rounded-xl">
