@@ -38,7 +38,6 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 	const [imageFile, setImageFile] = useState<File | null>(null);
 
 	// Stock
-	const [stockQuantity, setStockQuantity] = useState(initialData.stockQuantity || 0);
 	const [minStockAlert, setMinStockAlert] = useState(initialData.minStockAlert || 0);
 
 	// Costs & Pricing
@@ -61,7 +60,7 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 	}, [unitCost, taxCost]);
 
 	const handleSubmit = async () => {
-		if (!name || stockQuantity < 0 || basePrice < 0) {
+		if (!name || basePrice < 0) {
 			toast.error(intl.formatMessage({ id: "error.requiredFields", defaultMessage: "Verifique los campos requeridos." }));
 			return;
 		}
@@ -71,7 +70,6 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 				variables: {
 					inventoryPartId: Number(initialData.inventoryPartId),
 					name,
-					stockQuantity: parseInt(stockQuantity.toString(), 10),
 					unitCost: parseFloat(unitCost.toString()),
 					taxCost: parseFloat(taxCost.toString()),
 					totalUnitCost: parseFloat(totalUnitCost.toString()),
@@ -121,14 +119,14 @@ export default function EditInventoryPart({ row, onClose }: EditInventoryPartPro
 				{/* Stock */}
 				<div className="col-span-1">
 					<Label htmlFor="stock_input">
-						<FormattedMessage id="stockQuantity" defaultMessage="Cant. Inicial" /> *
+						<FormattedMessage id="inventory.currentStock" defaultMessage="Stock actual (se cambia con movimientos)" />
 					</Label>
 					<div className="relative mt-1">
 						<Input
 							type="number"
 							id="stock_input"
-							value={stockQuantity}
-							onChange={(e) => setStockQuantity(Number(e.target.value))}
+							value={initialData.stockQuantity}
+							disabled
 							className="pl-[42px]"
 						/>
 						<span className="absolute left-0 top-1/2 -translate-y-1/2 px-3 text-gray-500">

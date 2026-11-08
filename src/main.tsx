@@ -21,9 +21,12 @@ import "blobatar/motion.css";
 const baseUrl = import.meta.env.VITE_BASE_API_URL;
 
 const authLink = setContext((_, { headers }) => {
+	// El backend lee el usuario del JWT (created_by de órdenes y movimientos); sin esto queda en null.
+	const token = localStorage.getItem("token");
 	return {
 		headers: {
 			...headers,
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
 			"apollo-require-preflight": "true",
 			"graphql-preflight": "1", // Para asegurar compatibilidad con HotChocolate
 		}

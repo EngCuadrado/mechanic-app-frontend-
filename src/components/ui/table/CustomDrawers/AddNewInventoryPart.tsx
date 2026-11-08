@@ -53,7 +53,7 @@ export default function AddNewInventoryPart({ onClose }: { onClose?: () => void 
 					imageUrl: null,
 					imageFile: imageFile,
 					name,
-					stockQuantity: parseInt(stockQuantity.toString(), 10),
+					initialStock: parseInt(stockQuantity.toString(), 10),
 					unitCost: parseFloat(unitCost.toString()),
 					taxCost: parseFloat(taxCost.toString()),
 					totalUnitCost: parseFloat(totalUnitCost.toString()),

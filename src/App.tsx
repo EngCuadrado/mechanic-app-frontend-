@@ -33,6 +33,10 @@ import Empleados from "./pages/Empleados";
 import Reportes from "./pages/Reportes";
 import Sales from "./components/ui/catalogs/Sales";
 import Inventory from "./pages/Tables/Inventory";
+import { MovementsPage } from "./features/inventory";
+import { InspectionPage } from "./features/inspections";
+import { RentalsPage } from "./features/rentals";
+import { WorkOrdersPage, WorkOrderDetailPage } from "./features/work-orders";
 import Vehicles from "./pages/Tables/Vehicles";
 
 export default function App() {
@@ -84,6 +88,11 @@ export default function App() {
 									path="/vehicles"
 									element={<Vehicles />}
 								/>
+								<Route path="/inventory/:id/movimientos" element={<MovementsPage />} />
+								<Route path="/ordenes/:id/inspecciones/:inspectionId" element={<InspectionPage />} />
+								<Route path="/alquileres" element={<RentalsPage />} />
+								<Route path="/ordenes" element={<WorkOrdersPage />} />
+								<Route path="/ordenes/:id" element={<WorkOrderDetailPage />} />
 
 								<Route
 									path="/catalogs"

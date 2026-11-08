@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router";
 import { useMutation } from "@apollo/client/react";
 import { FormattedMessage, useIntl } from "react-intl";
 import {
@@ -14,6 +15,7 @@ import {
 	PencilSquareIcon,
 	MinusCircleIcon,
 	CheckCircleIcon,
+	ArrowsRightLeftIcon,
 } from "@heroicons/react/24/outline";
 
 import CellWithDrawer from "../CellWithDrawer";
@@ -79,6 +81,16 @@ const EditInventoryPartModal = ({ row, onClose }: EditInventoryPartDrawerProps) 
 			<EditInventoryPart row={row} onClose={onClose} />
 		</SimpleModal>
 	);
+};
+
+// No abre modal: navega a la pantalla de movimientos y cierra el menú.
+const MovementsLink = ({ row, onClose }: ToggleActivatedModalProps) => {
+	const navigate = useNavigate();
+	useEffect(() => {
+		navigate(`/inventory/${row.original.inventoryPartId}/movimientos`);
+		onClose();
+	}, []);
+	return null;
 };
 
 const ToggleActivatedModal = ({ row, onClose }: ToggleActivatedModalProps) => {
@@ -183,6 +195,18 @@ export const InventoryPartCellActions = ({ row }: InventoryPartCellActionsProps)
 				</Fragment>
 			),
 			drawer: EditInventoryPartModal,
+		},
+		{
+			showWhen: true,
+			label: (
+				<Fragment>
+					<ArrowsRightLeftIcon className="size-4.5 stroke-1" />
+					<span>
+						<FormattedMessage id="inventory.movement.title" defaultMessage="Movimientos" />
+					</span>
+				</Fragment>
+			),
+			drawer: MovementsLink,
 		},
 		{
 			showWhen: true,

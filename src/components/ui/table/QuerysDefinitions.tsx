@@ -716,7 +716,7 @@ export const CREATE_INVENTORY_PART_MUTATION = gql`
 		$imageUrl: String
 		$imageFile: Upload
 		$name: String!
-		$stockQuantity: Int!
+		$initialStock: Int
 		$unitCost: Decimal!
 		$taxCost: Decimal!
 		$totalUnitCost: Decimal!
@@ -728,7 +728,7 @@ export const CREATE_INVENTORY_PART_MUTATION = gql`
 			imageUrl: $imageUrl
 			imageFile: $imageFile
 			name: $name
-			stockQuantity: $stockQuantity
+			initialStock: $initialStock
 			unitCost: $unitCost
 			taxCost: $taxCost
 			totalUnitCost: $totalUnitCost
@@ -748,7 +748,6 @@ export const UPDATE_INVENTORY_PART_MUTATION = gql`
 	mutation UpdateInventoryPart(
 		$inventoryPartId: Int!
 		$name: String!
-		$stockQuantity: Int!
 		$unitCost: Decimal!
 		$taxCost: Decimal!
 		$totalUnitCost: Decimal!
@@ -761,7 +760,6 @@ export const UPDATE_INVENTORY_PART_MUTATION = gql`
 		updateInventoryPart(
 			inventoryPartId: $inventoryPartId,
 			name: $name,
-			stockQuantity: $stockQuantity,
 			unitCost: $unitCost,
 			taxCost: $taxCost,
 			totalUnitCost: $totalUnitCost,

@@ -6,6 +6,7 @@ import {
 	FolderOpenIcon,
 	ArchiveBoxIcon,
     TruckIcon,
+	WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 
 import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
@@ -32,6 +33,11 @@ const AppSidebar: React.FC = () => {
 				icon: <TruckIcon className="size-6" />,
 				name:  intl.formatMessage({ id: "vehicles" }, { count: 2 }),
 				path: "/vehicles",
+			},
+			{
+				icon: <WrenchScrewdriverIcon className="size-6" />,
+				name: intl.formatMessage({ id: "workOrder.title", defaultMessage: "Órdenes de trabajo" }),
+				path: "/ordenes",
 			},
 			{
 				icon: <ArchiveBoxIcon />,
