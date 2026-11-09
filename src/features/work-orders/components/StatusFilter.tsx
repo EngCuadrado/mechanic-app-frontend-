@@ -25,7 +25,9 @@ export default function StatusFilter({ counts, value, onChange }: Props) {
 					}`}
 				>
 					<span className="text-3xl leading-none font-bold">{counts[s] ?? 0}</span>
-					<span className="text-sm font-semibold">{intl.formatMessage({ id: statusMessageId(s), defaultMessage: s })}</span>
+					<span className="text-xs font-semibold tracking-wide uppercase">
+						{intl.formatMessage({ id: statusMessageId(s), defaultMessage: s })}
+					</span>
 				</button>
 			))}
 		</div>

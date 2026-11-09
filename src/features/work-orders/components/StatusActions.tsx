@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useIntl } from "react-intl";
-import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ActionBar from "../../../shared/components/ActionBar";
 import ConfirmDialog from "../../../shared/components/ConfirmDialog";
 import IconButton from "../../../shared/components/IconButton";
@@ -11,11 +11,11 @@ import { CANCELLABLE, NEXT_STATUS, statusMessageId, type WorkOrderStatus } from 
 
 const REFETCH = { refetchQueries: ["GetWorkOrder", "GetWorkOrders", "GetWorkOrderStatusCounts"] };
 
-/** Barra fija abajo: una acción principal (siguiente estado) y cancelar con confirmación. */
-export default function StatusActions({ workOrderId, status, pending = [] }: { workOrderId: number; status: string; pending?: string[] }) {
+/** Barra fija abajo: agregar trabajo, siguiente estado y cancelar con confirmación. */
+export default function StatusActions({ workOrderId, status, onAdd }: { workOrderId: number; status: string; onAdd?: () => void }) {
 	const intl = useIntl();
 	const navigate = useNavigate();
-	const [confirm, setConfirm] = useState<"next" | "cancel" | null>(null);
+	const [confirm, setConfirm] = useState(false);
 	const [change, changing] = useApiMutation(CAMBIAR_ESTADO_ORDEN, REFETCH);
 	const [cancel, cancelling] = useApiMutation(CANCELAR_ORDEN, REFETCH);
 
@@ -24,64 +24,56 @@ export default function StatusActions({ workOrderId, status, pending = [] }: { w
 	if (!next && !canCancel) return null;
 
 	const nextLabel = next ? intl.formatMessage({ id: statusMessageId(next), defaultMessage: next }) : "";
-	const run = async () => {
-		const ok = confirm === "cancel" ? await cancel({ workOrderId }) : await change({ workOrderId, newStatus: next });
-		if (ok) setConfirm(null);
+	const runCancel = async () => {
+		if (await cancel({ workOrderId })) setConfirm(false);
 	};
 
 	return (
 		<>
+			{canCancel && (
+				<IconButton
+					variant="outline"
+					showLabel
+					className="w-full text-red-600 dark:text-red-400"
+					icon={<XMarkIcon className="size-5" />}
+					label={intl.formatMessage({ id: "workOrder.cancel", defaultMessage: "Cancelar orden" })}
+					onClick={() => setConfirm(true)}
+				/>
+			)}
 			<ActionBar>
-				{canCancel && (
+				{onAdd && (
 					<IconButton
 						variant="outline"
 						showLabel
-						icon={<XMarkIcon className="size-5" />}
-						label={intl.formatMessage({ id: "workOrder.cancel", defaultMessage: "Cancelar orden" })}
-						onClick={() => setConfirm("cancel")}
+						className="flex-1"
+						icon={<PlusIcon className="size-5" />}
+						label={intl.formatMessage({ id: "workOrder.add", defaultMessage: "Agregar" })}
+						onClick={onAdd}
 					/>
 				)}
 				{next && (
 					<IconButton
 						variant="primary"
 						showLabel
+						className="flex-1"
 						icon={<ArrowRightIcon className="size-5" />}
 						label={nextLabel}
 						onClick={() =>
-							next === "Entregado"
-								? navigate(`/ordenes/${workOrderId}/entregar`)
-								: pending.length
-									? setConfirm("next")
-									: change({ workOrderId, newStatus: next })
+							next === "Entregado" ? navigate(`/ordenes/${workOrderId}/entregar`) : change({ workOrderId, newStatus: next })
 						}
 						disabled={changing}
 					/>
 				)}
 			</ActionBar>
 			<ConfirmDialog
-				isOpen={confirm !== null}
-				danger={confirm === "cancel"}
-				loading={changing || cancelling}
-				title={
-					confirm === "cancel"
-						? intl.formatMessage({ id: "workOrder.cancel", defaultMessage: "Cancelar orden" })
-						: nextLabel
-				}
-				message={
-					confirm === "cancel"
-						? intl.formatMessage({ id: "workOrder.cancel.confirm", defaultMessage: "Se devolverá el stock de los repuestos y la orden quedará cerrada." })
-						: [
-								pending.length
-									? intl.formatMessage(
-											{ id: "workOrder.guide.missing", defaultMessage: "Falta: {items}." },
-											{ items: pending.map((p) => intl.formatMessage({ id: `workOrder.guide.task.${p}` })).join(", ") },
-										)
-									: "",
-							].filter(Boolean).join(" ")
-				}
+				isOpen={confirm}
+				danger
+				loading={cancelling}
+				title={intl.formatMessage({ id: "workOrder.cancel", defaultMessage: "Cancelar orden" })}
+				message={intl.formatMessage({ id: "workOrder.cancel.confirm", defaultMessage: "Se devolverá el stock de los repuestos y la orden quedará cerrada." })}
 				confirmLabel={intl.formatMessage({ id: "common.confirm", defaultMessage: "Confirmar" })}
-				onConfirm={run}
-				onClose={() => setConfirm(null)}
+				onConfirm={runCancel}
+				onClose={() => setConfirm(false)}
 			/>
 		</>
 	);

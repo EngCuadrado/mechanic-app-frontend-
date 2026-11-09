@@ -6,13 +6,13 @@ import { formatMoney } from "../../../shared/utils/format";
 import { isClosed, OVERDUE_MINUTES, typeMessageId } from "../constants";
 import { isReceptionIncomplete, orderPath } from "../readiness";
 import type { WorkOrderSummary } from "../types";
-import StatusBadge, { statusStyle } from "./StatusBadge";
+import { StatusLabel } from "./StatusBadge";
 
 const initials = (m: { firstName: string | null; lastName: string | null }) =>
 	`${m.firstName?.[0] ?? ""}${m.lastName?.[0] ?? ""}`.toUpperCase() || "?";
 
 /**
- * Tarjeta de una orden: franja de color por estado, problema, mecánicos, antigüedad y total. Toda la tarjeta es tocable.
+ * Tarjeta de una orden: etiqueta de estado, problema, mecánicos, antigüedad y total. Toda la tarjeta es tocable.
  * Con `onOpen` es un div (el tablero la arrastra: un <a> dentro de un arrastre provoca navegación nativa con recarga).
  */
 export default function WorkOrderCard({ order, onOpen }: { order: WorkOrderSummary; onOpen?: () => void }) {
@@ -23,10 +23,10 @@ export default function WorkOrderCard({ order, onOpen }: { order: WorkOrderSumma
 	const overdue = !isClosed(order.currentStatus) && minutes > OVERDUE_MINUTES;
 	const incomplete = isReceptionIncomplete(order);
 	const services = order.services.map((s) => s.description).filter(Boolean);
-	const className = "relative flex h-full min-h-11 flex-col gap-2.5 overflow-hidden rounded-2xl border border-gray-200 bg-white py-3.5 pr-3.5 pl-5 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]";
+	const className = "relative flex h-full min-h-11 flex-col gap-2.5 overflow-hidden rounded-2xl border border-gray-200 bg-white p-3.5 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-white/[0.03] dark:hover:bg-white/[0.06]";
 	const body = (
 		<>
-			<span aria-hidden className={`absolute inset-y-0 left-0 w-2 ${statusStyle(order.currentStatus).stripe}`} />
+			<div><StatusLabel status={order.currentStatus} /></div>
 			<div className="flex items-start justify-between gap-3">
 				<div className="min-w-0">
 					<p className="truncate text-xl font-bold tracking-wide text-gray-800 dark:text-white/90">{order.vehicle?.plate ?? "—"}</p>
@@ -34,7 +34,6 @@ export default function WorkOrderCard({ order, onOpen }: { order: WorkOrderSumma
 						{[model?.brand?.brandName, model?.modelName].filter(Boolean).join(" ")} · #{order.workOrderId}
 					</p>
 				</div>
-				<StatusBadge status={order.currentStatus} />
 			</div>
 			{incomplete && (
 				<p className="inline-flex items-center gap-1 text-sm font-medium text-warning-600 dark:text-warning-400">

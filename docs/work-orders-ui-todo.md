@@ -154,3 +154,15 @@ Plan: [`superpowers/plans/2026-11-08-work-orders-redesign.md`](./superpowers/pla
 - [x] Servicios elegidos de un catálogo fijo (`SERVICE_CATALOG`); motivos fijos (`ORDER_REASONS`), en `features/work-orders/constants.ts`.
 - [ ] Pendiente backend: exigir inspección y firma al cambiar de estado (hoy solo lo aplica la UI).
 - [ ] Probar en navegador (390 px y 820 px, claro y oscuro) y con el backend real; `npm run lint` no corre porque el repo no tiene `eslint.config.js`.
+
+## Hojas y formularios de la orden (2026-11-08)
+Diseño: [`superpowers/specs/2026-11-08-work-sheets-design.md`](./superpowers/specs/2026-11-08-work-sheets-design.md) ·
+Plan: [`superpowers/plans/2026-11-08-work-sheets.md`](./superpowers/plans/2026-11-08-work-sheets.md).
+- [x] Una lista de Trabajo (servicios + repuestos, total del backend) y una hoja "Agregar" con selector Servicio | Repuesto y botón fijo que dice qué falta.
+- [x] Servicio: chips de catálogo, precio, mecánico en chips; costo interno solo en servicios externos (`bodywork`, `paint`, `isExternalService`).
+- [x] Repuestos: selección múltiple con +/−, se agregan en serie; si uno falla queda elegido; si ya está en la orden se suma la cantidad.
+- [x] `BottomSheet` con `footer` fijo; `ConfirmDialog` ahora es hoja; `SegmentedControl` compartido.
+- [x] Registro (inspecciones, fotos, firmas) en filas; se quitaron `HandoverSection`, `StatusGuide` y las pestañas "Ver todo".
+- [x] Recepción avisa "Ver orden" si el vehículo ya tiene una orden abierta (`useOpenOrder`).
+- [ ] Mecánicos: tope de 12 chips sin buscador; si el taller tiene más, agregar buscador.
+- [ ] Zona horaria: el backend manda fechas sin zona (UTC-6) y `parseServerDate` las toma como UTC; las órdenes nuevas salen "Atrasada".

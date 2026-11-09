@@ -1,36 +1,42 @@
+import type { ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { statusMessageId } from "../constants";
 
-/** Colores por estado, una sola vez: insignia, franja de la tarjeta y tarjeta de filtro. */
-export const STATUS_STYLES: Record<string, { badge: string; stripe: string; tile: string; ring: string }> = {
+/** Estados al estilo Jira: etiqueta (lozenge) con color suave y texto en mayúsculas; encabezados neutros. */
+export const STATUS_STYLES: Record<string, { badge: string; label: string; stripe: string; tile: string; ring: string }> = {
 	Recibido: {
-		badge: "bg-blue-50 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400",
-		stripe: "bg-blue-500",
-		tile: "bg-blue-50 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400",
-		ring: "border-blue-500",
-	},
-	"En proceso": {
-		badge: "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
-		stripe: "bg-amber-500",
-		tile: "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
-		ring: "border-amber-500",
-	},
-	Listo: {
-		badge: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
-		stripe: "bg-emerald-500",
-		tile: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
-		ring: "border-emerald-500",
-	},
-	Entregado: {
-		badge: "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300",
+		badge: "bg-[#DFE1E6] text-[#42526E] dark:bg-white/10 dark:text-gray-300",
+		label: "bg-[#5E6C84] text-white",
 		stripe: "bg-gray-400",
-		tile: "bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-300",
+		tile: "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-gray-300",
 		ring: "border-gray-500",
 	},
+	"En proceso": {
+		badge: "bg-[#DEEBFF] text-[#0747A6] dark:bg-blue-500/20 dark:text-blue-300",
+		label: "bg-[#0C66E4] text-white",
+		stripe: "bg-blue-500",
+		tile: "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-gray-300",
+		ring: "border-blue-500",
+	},
+	Listo: {
+		badge: "bg-[#EAE6FF] text-[#403294] dark:bg-violet-500/20 dark:text-violet-300",
+		label: "bg-[#6E5DC6] text-white",
+		stripe: "bg-violet-500",
+		tile: "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-gray-300",
+		ring: "border-violet-500",
+	},
+	Entregado: {
+		badge: "bg-[#E3FCEF] text-[#006644] dark:bg-emerald-500/20 dark:text-emerald-300",
+		label: "bg-[#1F845A] text-white",
+		stripe: "bg-emerald-500",
+		tile: "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-gray-300",
+		ring: "border-emerald-500",
+	},
 	Cancelado: {
-		badge: "bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-400",
+		badge: "bg-[#FFEBE6] text-[#BF2600] dark:bg-red-500/20 dark:text-red-300",
+		label: "bg-[#C9372C] text-white",
 		stripe: "bg-red-500",
-		tile: "bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-400",
+		tile: "bg-gray-100 text-gray-600 dark:bg-white/[0.06] dark:text-gray-300",
 		ring: "border-red-500",
 	},
 };
@@ -41,8 +47,18 @@ export const statusStyle = (status: string) => STATUS_STYLES[status] ?? STATUS_S
 export default function StatusBadge({ status }: { status: string }) {
 	const intl = useIntl();
 	return (
-		<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${statusStyle(status).badge}`}>
+		<span className={`inline-flex items-center rounded px-2 py-0.5 text-[11px] font-bold tracking-wide uppercase ${statusStyle(status).badge}`}>
 			{intl.formatMessage({ id: statusMessageId(status), defaultMessage: status })}
+		</span>
+	);
+}
+
+/** Etiqueta sólida estilo Trello (tarjetas y encabezados del tablero). `children` reemplaza el nombre del estado. */
+export function StatusLabel({ status, children }: { status: string; children?: ReactNode }) {
+	const intl = useIntl();
+	return (
+		<span className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-semibold ${statusStyle(status).label}`}>
+			{children ?? intl.formatMessage({ id: statusMessageId(status), defaultMessage: status })}
 		</span>
 	);
 }

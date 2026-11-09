@@ -59,8 +59,18 @@ export default function SignaturePad({ onSave, saving, heightClass = "h-40" }: P
 		setEmpty(true);
 	};
 
-	const save = () =>
-		canvas.current!.toBlob((b) => b && onSave(new File([b], "firma.png", { type: "image/png" })), "image/png");
+	// El lienzo es transparente: se exporta sobre fondo blanco para que la firma se vea igual en claro y oscuro.
+	const save = () => {
+		const c = canvas.current!;
+		const out = document.createElement("canvas");
+		out.width = c.width;
+		out.height = c.height;
+		const ctx = out.getContext("2d")!;
+		ctx.fillStyle = "#ffffff";
+		ctx.fillRect(0, 0, out.width, out.height);
+		ctx.drawImage(c, 0, 0);
+		out.toBlob((b) => b && onSave(new File([b], "firma.png", { type: "image/png" })), "image/png");
+	};
 
 	return (
 		<div className="flex flex-col gap-3">

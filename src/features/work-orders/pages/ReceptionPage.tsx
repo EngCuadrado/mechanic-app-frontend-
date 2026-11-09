@@ -9,6 +9,7 @@ import { CREAR_ORDEN } from "../api/mutations";
 import ChecklistFlow from "../components/ChecklistFlow";
 import VehicleStep, { type PickedVehicle } from "../components/VehicleStep";
 import { orderTypeForReason, reasonMessageId } from "../constants";
+import { useOpenOrder } from "../hooks/useOpenOrder";
 import { useSignOrder } from "../hooks/useSignOrder";
 import { useWorkOrder } from "../hooks/useWorkOrder";
 
@@ -30,6 +31,7 @@ export default function ReceptionPage() {
 		refetchQueries: ["GetWorkOrders", "GetWorkOrderStatusCounts"],
 	});
 	const { sign, signing } = useSignOrder("dropoff");
+	const openOrderId = useOpenOrder(vehicle?.vehicleId ?? null);
 	const exit = () => navigate("/ordenes");
 
 	if (resumeId !== null && loading && !order) return <Loading />;
@@ -55,7 +57,7 @@ export default function ReceptionPage() {
 		);
 	}
 
-	const ready = vehicle !== null && reason !== null && driver.trim() !== "";
+	const ready = vehicle !== null && reason !== null && driver.trim() !== "" && openOrderId === null;
 	const start = async () => {
 		if (!vehicle || !reason) return;
 		const data = await create({
@@ -78,7 +80,7 @@ export default function ReceptionPage() {
 			loading={creating}
 			onNext={start}
 		>
-			<VehicleStep vehicle={vehicle} onVehicle={setVehicle} reason={reason} onReason={setReason} driver={driver} onDriver={setDriver} />
+			<VehicleStep vehicle={vehicle} onVehicle={setVehicle} reason={reason} onReason={setReason} driver={driver} onDriver={setDriver} openOrderId={openOrderId} />
 		</StepFlow>
 	);
 }

@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useIntl } from "react-intl";
 import ChoiceChips from "../../../shared/components/ChoiceChips";
 import EntityPicker from "../../../shared/components/EntityPicker";
@@ -19,12 +20,14 @@ interface Props {
 	onReason: (r: string) => void;
 	driver: string;
 	onDriver: (d: string) => void;
+	/** Orden abierta del vehículo elegido: no se puede recibir otra. */
+	openOrderId?: number | null;
 }
 
 const vehicleName = (v: PickedVehicle) => [v.model?.brand?.brandName, v.model?.modelName].filter(Boolean).join(" ");
 
 /** Paso 1 de la recepción: placa, motivo (lista fija) y quien lo trae (único texto). */
-export default function VehicleStep({ vehicle, onVehicle, reason, onReason, driver, onDriver }: Props) {
+export default function VehicleStep({ vehicle, onVehicle, reason, onReason, driver, onDriver, openOrderId }: Props) {
 	const intl = useIntl();
 	return (
 		<div className="flex flex-col gap-5">
@@ -52,6 +55,14 @@ export default function VehicleStep({ vehicle, onVehicle, reason, onReason, driv
 					)}
 					onSelect={onVehicle}
 				/>
+			)}
+			{openOrderId != null && (
+				<div role="alert" className="flex items-center justify-between gap-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+					<span>{intl.formatMessage({ id: "workOrder.openExists", defaultMessage: "Este vehículo ya tiene una orden abierta" })}</span>
+					<Link to={`/ordenes/${openOrderId}`} className="flex min-h-11 shrink-0 items-center font-semibold underline">
+						{intl.formatMessage({ id: "workOrder.openExists.view", defaultMessage: "Ver orden" })}
+					</Link>
+				</div>
 			)}
 			<div className="flex flex-col gap-2">
 				<Label>{intl.formatMessage({ id: "workOrder.reception.reason", defaultMessage: "Motivo" })}</Label>

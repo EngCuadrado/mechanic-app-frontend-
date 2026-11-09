@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { useIntl } from "react-intl";
 import { statusMessageId } from "../constants";
-import { statusStyle } from "./StatusBadge";
+import { StatusLabel, statusStyle } from "./StatusBadge";
 
 interface Props {
 	status: string;
@@ -33,8 +33,8 @@ export default function BoardColumn({ status, count, accepting, children }: Prop
 			}`}
 		>
 			<h2 className={`flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold ${statusStyle(status).tile}`}>
-				{name}
-				<span className="text-lg font-bold">{count}</span>
+				<StatusLabel status={status}>{name}</StatusLabel>
+				<span className="text-sm font-semibold">{count}</span>
 			</h2>
 			{children}
 		</section>

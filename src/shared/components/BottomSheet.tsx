@@ -9,10 +9,12 @@ interface BottomSheetProps {
 	onClose: () => void;
 	title: string;
 	children: ReactNode;
+	/** Barra fija debajo del contenido (acción principal); no se desplaza con él. */
+	footer?: ReactNode;
 }
 
 /** Panel que sube desde abajo en móvil (formularios y selectores); modal centrado en pantallas grandes. */
-export default function BottomSheet({ isOpen, onClose, title, children }: BottomSheetProps) {
+export default function BottomSheet({ isOpen, onClose, title, children, footer }: BottomSheetProps) {
 	const intl = useIntl();
 	return (
 		<Transition appear show={isOpen} as={Fragment}>
@@ -49,9 +51,14 @@ export default function BottomSheet({ isOpen, onClose, title, children }: Bottom
 									onClick={onClose}
 								/>
 							</div>
-							<div className="overflow-y-auto p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+							<div className={`overflow-y-auto p-4 ${footer ? "" : "pb-[calc(1rem+env(safe-area-inset-bottom))]"}`}>
 								{children}
 							</div>
+							{footer && (
+								<div className="border-t border-gray-200 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] dark:border-gray-800">
+									{footer}
+								</div>
+							)}
 						</DialogPanel>
 					</TransitionChild>
 				</div>

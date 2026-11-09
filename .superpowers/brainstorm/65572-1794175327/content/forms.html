@@ -1,0 +1,51 @@
+<h2>Agregar vehículo: hoy vs. dos propuestas</h2>
+<p class="subtitle">Teléfono. En ambas el botón principal queda siempre visible abajo y solo se pide lo necesario; el resto se oculta o se calcula.</p>
+
+<div class="split" style="align-items:flex-start">
+  <div class="mockup">
+    <div class="mockup-header">Hoy</div>
+    <div class="mockup-body" style="font-size:12px">
+      <div class="label">Empresa *</div><input class="mock-input" placeholder="Seleccione Empresa">
+      <div class="label">Modelo *</div><input class="mock-input" placeholder="Seleccione Modelo">
+      <div class="label">Placa *</div><input class="mock-input" placeholder="Ej. M12345">
+      <div class="label">VIN *</div><input class="mock-input">
+      <div class="label">Chasis</div><input class="mock-input">
+      <div class="label">Año *</div><input class="mock-input" value="2026">
+      <div class="label">Kilometraje Actual *</div><input class="mock-input" value="0">
+      <div class="label">Próximo Mant. (Km)</div><input class="mock-input" value="0">
+      <p class="subtitle">… 4 campos de fecha más.<br><b>Guardar</b> está al final del scroll, fuera de pantalla.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">A · Hoja con lo esencial</div>
+    <div class="mockup-body">
+      <div style="text-align:center;margin-bottom:6px"><span style="display:inline-block;width:36px;height:4px;border-radius:2px;background:#bbb"></span></div>
+      <h3 style="margin:0 0 10px">Nuevo vehículo</h3>
+      <input class="mock-input" placeholder="Placa" style="font-size:20px;padding:12px;text-align:center;letter-spacing:2px">
+      <div style="display:flex;gap:8px;margin-top:8px"><span class="mock-button" style="flex:1;padding:12px">Empresa ▾</span><span class="mock-button" style="flex:1;padding:12px">Modelo ▾</span></div>
+      <input class="mock-input" placeholder="VIN" style="margin-top:8px">
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><span class="label" style="flex:1">Año</span><span class="mock-button" style="padding:8px 14px">−</span><b>2026</b><span class="mock-button" style="padding:8px 14px">+</span></div>
+      <input class="mock-input" placeholder="Kilometraje" inputmode="numeric" style="margin-top:8px">
+      <div class="placeholder" style="padding:10px;margin-top:10px;text-align:left">▸ Más datos (opcional)<br><small>Chasis · mantenimiento · seguro · fechas</small></div>
+      <button class="mock-button" style="width:100%;padding:14px;margin-top:10px">Guardar vehículo</button>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">B · Por pasos</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:4px;margin-bottom:10px"><div style="flex:1;height:5px;background:#2563eb;border-radius:3px"></div><div style="flex:1;height:5px;background:#ddd;border-radius:3px"></div><div style="flex:1;height:5px;background:#ddd;border-radius:3px"></div></div>
+      <h3 style="margin:0 0 4px">¿Cuál es la placa?</h3>
+      <p class="subtitle" style="margin:0 0 10px">Paso 1 de 3</p>
+      <input class="mock-input" placeholder="M12345" style="font-size:24px;padding:16px;text-align:center;letter-spacing:3px">
+      <p class="subtitle" style="margin-top:14px">Paso 2: modelo y empresa<br>Paso 3: VIN, año y kilometraje<br>(fechas se agregan después)</p>
+      <button class="mock-button" style="width:100%;padding:14px;margin-top:70px">Siguiente →</button>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:20px">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)"><div class="letter">A</div><div class="content"><h3>Hoja con lo esencial</h3><p>Una sola vista corta, lo opcional plegado. Rápido para quien ya conoce los datos.</p></div></div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)"><div class="letter">B</div><div class="content"><h3>Por pasos</h3><p>Una pregunta por pantalla, estilo asistente. Más guiado, más toques.</p></div></div>
+</div>

@@ -45,12 +45,12 @@ export function usePartsDraft(workOrderId: number, server: WorkOrderPart[]) {
 		.map((r) => ({ ...r, quantity: qty[r.key] ?? r.quantity }))
 		.filter((r) => r.quantity > 0);
 
-	const flush = useCallback(async () => {
+	const flush = useCallback(async (override?: Record<string, number>) => {
 		if (busy.current) {
 			again.current = true;
 			return;
 		}
-		const sent = latest.current.qty;
+		const sent = { ...latest.current.qty, ...override };
 		if (Object.keys(sent).length === 0) return;
 		busy.current = true;
 		if (mounted.current) setSaving(true);
@@ -120,5 +120,11 @@ export function usePartsDraft(workOrderId: number, server: WorkOrderPart[]) {
 		setQuantity(`n${part.partId}`, 1);
 	};
 
-	return { rows, add, setQuantity, remove: (key: string) => setQuantity(key, 0), saving, pending: dirty };
+	/** Quita ya, sin esperar el retraso: un borrado no se deja en cola. */
+	const removeNow = (key: string) => {
+		setQuantity(key, 0);
+		flush({ [key]: 0 });
+	};
+
+	return { rows, add, setQuantity, remove: removeNow, saving, pending: dirty };
 }

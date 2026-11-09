@@ -29,15 +29,6 @@ export const isHandover = (type: string) => type === "Entrega" || type === "Devo
 export const statusMessageId = (status: string) => `workOrder.status.${status.replace(/\s+/g, "_")}`;
 export const typeMessageId = (type: string) => `workOrder.type.${type}`;
 
-export type SectionId = "handover" | "inspections" | "photos" | "services" | "parts";
-
-/** Qué se muestra directo en cada estado, en orden. Lo demás queda tras "Ver todo". */
-export const STATUS_SECTIONS: Record<string, SectionId[]> = {
-	Recibido: ["handover", "inspections", "photos"],
-	"En proceso": ["services", "parts", "photos"],
-	Listo: ["inspections", "photos", "handover", "services", "parts"],
-};
-
 /** Etapa de fotos que corresponde a cada estado. */
 export const STATUS_PHOTO_STAGE: Record<string, string> = { Recibido: "Antes", "En proceso": "Otro", Listo: "Despues" };
 
@@ -46,7 +37,11 @@ export const ORDER_REASONS = ["preventive", "brakes", "engine", "suspension", "e
 export const reasonMessageId = (key: string) => `workOrder.reason.${key}`;
 
 /** Servicios que se pueden agregar a una orden (lista fija). Textos en es.json (workOrder.service.*). */
-export const SERVICE_CATALOG = ["oilChange", "filters", "brakes", "alignment", "electrical", "suspension", "tires", "ac", "other"] as const;
+export const SERVICE_CATALOG = ["oilChange", "filters", "brakes", "alignment", "electrical", "suspension", "tires", "ac", "bodywork", "paint", "other"] as const;
+
+/** Servicios que se hacen fuera del taller: piden costo interno (lo que cuesta ese servicio). */
+const EXTERNAL_SERVICES: readonly string[] = ["bodywork", "paint"];
+export const isExternalService = (key: string | null) => key !== null && EXTERNAL_SERVICES.includes(key);
 export const serviceMessageId = (key: string) => `workOrder.service.${key}`;
 
 /** Una orden abierta que lleva más de esto en el taller se marca como atrasada. */
