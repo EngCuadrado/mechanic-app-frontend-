@@ -44,9 +44,6 @@ const EXTERNAL_SERVICES: readonly string[] = ["bodywork", "paint"];
 export const isExternalService = (key: string | null) => key !== null && EXTERNAL_SERVICES.includes(key);
 export const serviceMessageId = (key: string) => `workOrder.service.${key}`;
 
-/** Una orden abierta que lleva más de esto en el taller se marca como atrasada. */
-export const OVERDUE_MINUTES = 240;
-
 /** El tipo de orden se deduce del motivo: no se le pregunta al usuario. */
 export const orderTypeForReason = (reason: string): WorkOrderType =>
 	reason === "preventive" ? "Preventivo" : reason === "collision" ? "Choque" : "Correctivo";

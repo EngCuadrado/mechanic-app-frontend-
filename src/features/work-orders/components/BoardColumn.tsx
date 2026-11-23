@@ -15,11 +15,7 @@ interface Props {
 export default function BoardColumn({ status, count, accepting, children }: Props) {
 	const intl = useIntl();
 	const { setNodeRef, isOver } = useDroppable({ id: status });
-	const name = intl.formatMessage(
-		status === "Entregado"
-			? { id: "workOrder.deliveredToday", defaultMessage: "Entregadas hoy" }
-			: { id: statusMessageId(status), defaultMessage: status },
-	);
+	const name = intl.formatMessage({ id: statusMessageId(status), defaultMessage: status });
 	return (
 		<section
 			ref={setNodeRef}

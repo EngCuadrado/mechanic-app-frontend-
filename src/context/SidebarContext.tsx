@@ -26,7 +26,8 @@ export const useSidebar = () => {
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [isExpanded, setIsExpanded] = useState(true);
+	// Tablet horizontal (hasta 1535 px): empieza colapsado (90 px) para dejar el ancho al contenido; se expande con el botón.
+	const [isExpanded, setIsExpanded] = useState(() => window.innerWidth >= 1536);
 	const [isMobileOpen, setIsMobileOpen] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);

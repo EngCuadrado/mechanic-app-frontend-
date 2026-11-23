@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import Loading from "../../../components/ui/loading/Loading";
 import EmptyState from "../../../shared/components/EmptyState";
 import AddWorkSheet from "../components/AddWorkSheet";
+import CancelOrderButton from "../components/CancelOrderButton";
 import RecordRows from "../components/RecordRows";
 import StatusActions from "../components/StatusActions";
 import StatusBadge from "../components/StatusBadge";
@@ -15,7 +16,10 @@ import { isClosed } from "../constants";
 import type { WorkOrderService } from "../types";
 import { useWorkOrder } from "../hooks/useWorkOrder";
 
-/** Orden: encabezado, una lista de Trabajo, Registro y barra fija con "Agregar" y el siguiente estado. */
+/**
+ * Orden: encabezado con estado y cancelar; en tablet dos paneles (trabajo | carro y registro), en vertical apilado
+ * (carro → trabajo → registro). Barra fija con "Agregar" y el siguiente estado.
+ */
 export default function WorkOrderDetailPage() {
 	const intl = useIntl();
 	const id = Number(useParams().id);
@@ -39,9 +43,9 @@ export default function WorkOrderDetailPage() {
 	const back = intl.formatMessage({ id: "common.back", defaultMessage: "Volver" });
 
 	return (
-		<div className="mx-auto flex max-w-3xl flex-col gap-4 p-4 pb-28">
-			<header className="flex flex-col gap-4 rounded-2xl border border-gray-200 p-4 dark:border-gray-800">
-				<div className="flex items-center gap-3">
+		<div className="mx-auto flex max-w-3xl flex-col gap-4 p-4 pb-28 lg:max-w-none">
+			<header className="flex flex-col gap-3 rounded-2xl border border-gray-200 p-3 dark:border-gray-800 lg:flex-row lg:items-center lg:gap-6">
+				<div className="flex min-w-0 items-center gap-3 lg:shrink-0">
 					<Link
 						to="/ordenes"
 						aria-label={back}
@@ -58,12 +62,25 @@ export default function WorkOrderDetailPage() {
 					</div>
 					<StatusBadge status={order.currentStatus} />
 				</div>
-				<StatusProgress status={order.currentStatus} />
+				<div className="min-w-0 lg:flex-1">
+					<StatusProgress status={order.currentStatus} />
+				</div>
+				<div className="flex justify-end lg:shrink-0">
+					<CancelOrderButton workOrderId={order.workOrderId} status={order.currentStatus} />
+				</div>
 			</header>
 
-			<WorkOrderSummary order={order} />
-			<WorkList order={order} canEdit={!closed} onEditService={setSheet} />
-			<RecordRows order={order} />
+			<div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+				<div className="lg:col-start-2 lg:row-start-1">
+					<WorkOrderSummary order={order} />
+				</div>
+				<div className="lg:col-start-1 lg:row-span-2 lg:row-start-1">
+					<WorkList order={order} canEdit={!closed} onEditService={setSheet} />
+				</div>
+				<div className="lg:col-start-2 lg:row-start-2">
+					<RecordRows order={order} />
+				</div>
+			</div>
 
 			<StatusActions workOrderId={order.workOrderId} status={order.currentStatus} onAdd={closed ? undefined : () => setSheet("new")} />
 			<AddWorkSheet

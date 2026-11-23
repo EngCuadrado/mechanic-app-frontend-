@@ -1,15 +1,22 @@
 import { useIntl } from "react-intl";
-import { formatDateTime } from "../../../shared/utils/dates";
-import { typeMessageId } from "../constants";
+import { elapsedMinutes, formatDateTime, formatElapsed } from "../../../shared/utils/dates";
+import { formatMoney } from "../../../shared/utils/format";
+import { isClosed, typeMessageId } from "../constants";
 import type { WorkOrderDetail } from "../types";
 
-/** Datos generales de la orden (solo lectura). */
+/** Datos del carro y de la orden (solo lectura): tipo, entrada, km, tiempo en taller, empresa y total (discreto). */
 export default function WorkOrderSummary({ order }: { order: WorkOrderDetail }) {
 	const intl = useIntl();
+	const t = (id: string, defaultMessage: string) => intl.formatMessage({ id, defaultMessage });
+	const entryKm = order.inspections.find((i) => i.inspectionType === "Entrada")?.mileage;
 	const rows: [string, string | null | undefined][] = [
-		[intl.formatMessage({ id: "workOrder.type", defaultMessage: "Tipo" }), intl.formatMessage({ id: typeMessageId(order.type), defaultMessage: order.type })],
-		[intl.formatMessage({ id: "workOrder.entry", defaultMessage: "Entrada" }), formatDateTime(order.entryTimestamp)],
-		[intl.formatMessage({ id: "workOrder.company", defaultMessage: "Empresa" }), order.company?.name],
+		[t("workOrder.type", "Tipo"), intl.formatMessage({ id: typeMessageId(order.type), defaultMessage: order.type })],
+		[t("workOrder.entry", "Entrada"), formatDateTime(order.entryTimestamp)],
+		[t("workOrder.entryMileage", "Km de entrada"), entryKm != null ? `${intl.formatNumber(entryKm)} km` : null],
+		[t("workOrder.timeInShop", "Tiempo en el taller"), isClosed(order.currentStatus) ? null : formatElapsed(elapsedMinutes(order.entryTimestamp))],
+		[t("workOrder.exit", "Salida"), order.exitTimestamp ? formatDateTime(order.exitTimestamp) : null],
+		[t("workOrder.company", "Empresa"), order.company?.name],
+		[t("workOrder.total", "Total"), formatMoney(order.totalBilledPrice)],
 	];
 	return (
 		<section className="rounded-2xl border border-gray-200 p-4 text-sm dark:border-gray-800">

@@ -122,7 +122,13 @@ categoría por paso (`ChecklistStep`/`ChecklistFlow`) cuando nada los use.
    - Sin botón "Todo bien" por categoría: con los sí/no empezando en "bien" no hace falta.
    - En la entrega, una casilla sin foto muestra de fondo la foto de entrada del mismo ángulo como guía.
    - Las fotos del seed usan las claves de ángulo (`front`…); las tomas por ítem del checklist se quitaron.
-3. **Tablero y detalle en tablet:** 3 columnas, tarjeta compacta, dos paneles, cancelar en menú, repuestos al momento.
+3. ✅ **Tablero y detalle en tablet:** 3 columnas, tarjeta compacta, dos paneles, cancelar en el encabezado, repuestos al momento.
+   Lo que cambió al implementarla:
+   - "Cancelar" es un botón discreto (icono + texto, rojo) en el encabezado, no un menú "⋯" de una sola opción.
+   - El tablero filtra por placa en el cliente (son pocas órdenes abiertas, una sola página); el historial filtra en el servidor.
+   - "Entregadas hoy" abre el historial ya filtrado en Entregado.
+   - Sidebar colapsado por defecto por debajo de 1536 px; márgenes del layout más chicos en tablet.
+   - El aviso de stock bajo en el tablero queda para la fase 4 (con la flotilla).
 4. **Flotilla y ficha del carro** con historial, fotos comparadas y repuestos usados.
 
 ## Riesgos

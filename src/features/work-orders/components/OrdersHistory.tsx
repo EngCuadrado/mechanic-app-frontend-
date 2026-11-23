@@ -13,9 +13,9 @@ import { useStatusCounts } from "../hooks/useStatusCounts";
 import type { WorkOrderSummary } from "../types";
 
 /** Todas las órdenes (incluidas las cerradas) con filtro por estado y búsqueda por placa. */
-export default function OrdersHistory() {
+export default function OrdersHistory({ initialStatus = null }: { initialStatus?: string | null }) {
 	const intl = useIntl();
-	const [status, setStatus] = useState<string | null>(null);
+	const [status, setStatus] = useState<string | null>(initialStatus);
 	const [plate, setPlate] = useState("");
 	const search = useDebouncedValue(plate.trim());
 	const counts = useStatusCounts();

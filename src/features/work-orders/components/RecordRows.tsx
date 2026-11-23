@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { useIntl } from "react-intl";
 import { CameraIcon, ChevronRightIcon, ClipboardDocumentCheckIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import BottomSheet from "../../../shared/components/BottomSheet";
-import { PhotosSection } from "../../photos";
+import { PhotosSection, PhotoStrip } from "../../photos";
 import { isClosed, STATUS_PHOTO_STAGE } from "../constants";
 import type { WorkOrderDetail } from "../types";
 
@@ -53,7 +53,9 @@ export default function RecordRows({ order }: { order: WorkOrderDetail }) {
 				})}
 				<li>
 					<button type="button" className={ROW} onClick={() => setSheet("photos")}>
-						<Row icon={icon(CameraIcon)} label={t("workOrder.record.photos", "Fotos")} />
+						<Row icon={icon(CameraIcon)} label={t("workOrder.record.photos", "Fotos")}>
+							<PhotoStrip workOrderId={order.workOrderId} />
+						</Row>
 					</button>
 				</li>
 				<li>
