@@ -1,7 +1,7 @@
 # AGENTS.md — reglas para trabajar en este frontend
 
 Aplican a cualquier persona o agente que modifique este repo. Si una regla estorba, no la rompas en silencio:
-dilo y proponlo.
+dilo y proponlo. Mapa de los dos repos y plan de liberación: `../docs/` (fuera de git). Reglas del backend: `../mechanic-app-backend/AGENTS.md`.
 
 ## Stack (no agregar alternativas sin preguntar)
 React 19 + TypeScript + Vite · Tailwind (TailAdmin) · Apollo Client 4 (`@apollo/client/react`) · react-router 7 ·
@@ -65,17 +65,26 @@ demasiado grandes. **No agregues nada a esos archivos.** Las queries nuevas van 
 - Ningún texto fijo en JSX: `FormattedMessage` o `intl.formatMessage` con `id` + `defaultMessage`.
 - Las claves van en `src/lang/es.json`, con prefijo por feature (`workOrder.…`, `inventory.movement.…`), en orden alfabético.
 
-## 7. Móvil y tableta primero (uso en el taller, con una mano y a veces con guantes)
-La app se usa sobre todo en celular y tableta. Se diseña primero para pantalla táctil y después se adapta al escritorio.
+## 7. Tablet horizontal primero (uso en el taller, con guantes y a veces con una mano)
+El dispositivo de referencia es una **tablet Android de 10-11" en horizontal (1280×800 px CSS)**. Se diseña primero para esa
+pantalla táctil; vertical, celular y escritorio deben funcionar, pero se adaptan después.
+- **Breakpoint de diseño: `lg:` (≥1024 px) = tablet horizontal.** No uses `xl:` para el layout de tablet: algunas tablets reportan
+  menos de 1280 px. Sin prefijo = vertical/celular.
+- **Aprovecha el ancho:** en `lg:` usa dos paneles (lista | detalle, o trabajo | resumen y acciones) en lugar de una columna angosta
+  centrada. Ancho útil ≈ 1190 px con el sidebar colapsado; el alto útil es poco (~700 px con la barra del navegador): evita
+  encabezados altos y deja lo importante arriba sin scroll.
+- **Pulgares a los lados:** en horizontal la tablet se sostiene por los bordes. La acción principal va abajo a la derecha;
+  no pongas acciones frecuentes en el centro de la pantalla. Hojas y formularios (`BottomSheet`) en `lg:` se muestran como panel
+  lateral o modal ancho, no como una franja de 1280 px.
 - **Controles táctiles:** área mínima de toque de 44×44 px, con separación suficiente entre botones. Nada de acciones pegadas.
 - **Iconos primero, texto cuando hace falta:** las acciones frecuentes y reconocibles (agregar, editar, quitar, foto, siguiente
   estado) son botones con icono (Heroicons). Todo botón con solo icono lleva `aria-label` y `title`. Las acciones destructivas
   (cancelar, quitar) o poco obvias llevan icono **y** texto corto. Un solo estilo de icono para la misma acción en toda la app.
-- **Simple e intuitivo:** una acción principal por pantalla, visible y abajo al alcance del pulgar (barra de acciones fija en la
-  parte inferior en móvil). Pasos cortos; sin menús anidados ni flujos de más de 2-3 toques para lo frecuente.
+- **Simple e intuitivo:** una acción principal por pantalla, visible y al alcance del pulgar (`ActionBar`). Pasos cortos; sin
+  menús anidados ni flujos de más de 2-3 toques para lo frecuente.
 - **Entradas cómodas:** usa el teclado correcto (`inputMode="numeric"`, `type="tel"`, `type="date"`), selectores y botones
   de más/menos para cantidades, interruptores grandes para sí/no, y evita escribir texto libre cuando se puede elegir.
-- **Listas:** en pantalla chica una lista de órdenes o repuestos se muestra como **tarjetas**, no como tabla con scroll lateral.
+- **Listas:** órdenes y repuestos como **tarjetas** (en `lg:` en cuadrícula o tablero de columnas), no como tabla con scroll lateral.
   Nunca debe aparecer scroll horizontal en toda la página.
 - **Cámara y archivos:** las fotos se capturan con la cámara del dispositivo (`<input type="file" accept="image/*" capture>`).
   Muestra miniaturas, no la imagen completa, en las listas.
@@ -83,7 +92,7 @@ La app se usa sobre todo en celular y tableta. Se diseña primero para pantalla 
   deshace o corrige sin diálogos.
 - **Estado siempre visible:** estado de la orden, errores y confirmaciones se ven sin hacer scroll (toast + marca en el elemento).
 - **Rendimiento en red móvil:** paginar, no traer todo; carga progresiva; miniaturas ligeras.
-- Se prueba cada pantalla nueva en viewport de teléfono (~390 px) y de tableta (~820 px), vertical y horizontal, además de escritorio.
+- Se prueba cada pantalla nueva primero en **1280×800 y 1024×768 (horizontal)**, luego 800×1280 (vertical) y ~390 px (teléfono).
 
 ## 8. Estilo y accesibilidad
 - Tailwind con las clases y colores `brand-*` del proyecto; soporta modo oscuro (`dark:`) en todo lo nuevo.
