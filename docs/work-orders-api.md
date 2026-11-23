@@ -79,8 +79,11 @@ Borra los repuestos de la orden (el stock vuelve al inventario como movimiento `
 servicios y recalcula los totales. Una orden cancelada ya no admite cambios
 (`"La orden está Cancelado y no admite cambios."`).
 
-### `actualizarOrden` ⚠️
-Datos generales: `reportedIssue`, `notes`, nombres de choferes, URLs de firmas. No cambia el estado.
+### `actualizarOrden` ✅
+Datos generales: `reportedIssue`, `notes`, nombres de choferes, URLs de firmas. No cambia el estado. Omitir un argumento lo
+conserva; mandarlo en `null` lo **borra**. Ojo: HotChocolate toma como `null` una variable declarada que no se envía, así que
+**cada documento declara solo lo que cambia** (`GuardarFirmaEntrega`, `GuardarFirmaRecoge`, `GuardarQuienEntrega`,
+`GuardarQuienRecoge`). Un documento con todas las variables borraba las firmas al guardar el nombre (2026-11-22).
 
 ### `workOrders` (lista) ✅ solo lectura con la lista vacía
 ```graphql
@@ -202,6 +205,9 @@ schema: no está probado.)
 ## Inspecciones (checklist)
 
 ### `inspectionForm` ✅ (sin id, devuelve el formulario vacío)
+`inspectionForm(inspectionType: "Entrada")` sin id da el formulario vacío de ese tipo (la recepción lo usa antes de crear la orden).
+Con id incluye también los ítems **inactivos** ya contestados (`item.isActive = false`) para ver inspecciones viejas; al llenar,
+el frontend solo muestra los activos. Checklist activo desde el 2026-11-22: 4 ítems básicos (`mechanic-app-backend/docs/sql-basic-checklist.sql`).
 ```graphql
 query($id: Int) {
   inspectionForm(vehicleInspectionId: $id) {

@@ -32,10 +32,6 @@ export const typeMessageId = (type: string) => `workOrder.type.${type}`;
 /** Etapa de fotos que corresponde a cada estado. */
 export const STATUS_PHOTO_STAGE: Record<string, string> = { Recibido: "Antes", "En proceso": "Otro", Listo: "Despues" };
 
-/** Motivos de ingreso (lista fija, sin texto libre). Para cambiarlos: editar aquí y en es.json (workOrder.reason.*). */
-export const ORDER_REASONS = ["preventive", "brakes", "engine", "suspension", "electrical", "ac", "tires", "collision", "general"] as const;
-export const reasonMessageId = (key: string) => `workOrder.reason.${key}`;
-
 /** Servicios que se pueden agregar a una orden (lista fija). Textos en es.json (workOrder.service.*). */
 export const SERVICE_CATALOG = ["oilChange", "filters", "brakes", "alignment", "electrical", "suspension", "tires", "ac", "bodywork", "paint", "other"] as const;
 
@@ -44,6 +40,8 @@ const EXTERNAL_SERVICES: readonly string[] = ["bodywork", "paint"];
 export const isExternalService = (key: string | null) => key !== null && EXTERNAL_SERVICES.includes(key);
 export const serviceMessageId = (key: string) => `workOrder.service.${key}`;
 
-/** El tipo de orden se deduce del motivo: no se le pregunta al usuario. */
-export const orderTypeForReason = (reason: string): WorkOrderType =>
-	reason === "preventive" ? "Preventivo" : reason === "collision" ? "Choque" : "Correctivo";
+const PREVENTIVE_SERVICES: readonly string[] = ["oilChange", "filters"];
+
+/** El tipo de orden se deduce de lo que se le va a hacer: no se le pregunta al usuario. */
+export const orderTypeForServices = (keys: readonly string[]): WorkOrderType =>
+	keys.some(isExternalService) ? "Choque" : keys.length > 0 && keys.every((k) => PREVENTIVE_SERVICES.includes(k)) ? "Preventivo" : "Correctivo";

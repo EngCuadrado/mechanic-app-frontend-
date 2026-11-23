@@ -3,33 +3,32 @@ import { useIntl } from "react-intl";
 import ChoiceChips from "../../../shared/components/ChoiceChips";
 import EntityPicker from "../../../shared/components/EntityPicker";
 import { SEARCH_VEHICLES } from "../../../shared/api/pickers";
-import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
-import { ORDER_REASONS, reasonMessageId } from "../constants";
+import { SERVICE_CATALOG, serviceMessageId } from "../constants";
 
 export interface PickedVehicle {
 	vehicleId: number;
 	plate: string | null;
-	currentMilage?: number | null;
 	model?: { modelName: string; brand?: { brandName: string } | null } | null;
 }
 
 interface Props {
 	vehicle: PickedVehicle | null;
 	onVehicle: (v: PickedVehicle | null) => void;
-	reason: string | null;
-	onReason: (r: string) => void;
-	driver: string;
-	onDriver: (d: string) => void;
+	/** Lo que se le va a hacer (claves de SERVICE_CATALOG). */
+	services: string[];
+	onServices: (keys: string[]) => void;
 	/** Orden abierta del vehículo elegido: no se puede recibir otra. */
 	openOrderId?: number | null;
 }
 
 const vehicleName = (v: PickedVehicle) => [v.model?.brand?.brandName, v.model?.modelName].filter(Boolean).join(" ");
 
-/** Paso 1 de la recepción: placa, motivo (lista fija) y quien lo trae (único texto). */
-export default function VehicleStep({ vehicle, onVehicle, reason, onReason, driver, onDriver, openOrderId }: Props) {
+/** Recepción: placa y lo que se le va a hacer (chips, se pueden elegir varios). */
+export default function VehicleStep({ vehicle, onVehicle, services, onServices, openOrderId }: Props) {
 	const intl = useIntl();
+	const toggle = (k: string) => onServices(services.includes(k) ? services.filter((s) => s !== k) : [...services, k]);
+	const workLabel = intl.formatMessage({ id: "workOrder.reception.work", defaultMessage: "¿Qué se le va a hacer?" });
 	return (
 		<div className="flex flex-col gap-5">
 			{vehicle ? (
@@ -66,17 +65,13 @@ export default function VehicleStep({ vehicle, onVehicle, reason, onReason, driv
 				</div>
 			)}
 			<div className="flex flex-col gap-2">
-				<Label>{intl.formatMessage({ id: "workOrder.reception.reason", defaultMessage: "Motivo" })}</Label>
+				<Label>{workLabel}</Label>
 				<ChoiceChips
-					ariaLabel={intl.formatMessage({ id: "workOrder.reception.reason", defaultMessage: "Motivo" })}
-					value={reason}
-					onChange={onReason}
-					options={ORDER_REASONS.map((r) => ({ value: r, label: intl.formatMessage({ id: reasonMessageId(r) }) }))}
+					ariaLabel={workLabel}
+					value={services}
+					onChange={toggle}
+					options={SERVICE_CATALOG.map((k) => ({ value: k, label: intl.formatMessage({ id: serviceMessageId(k), defaultMessage: k }) }))}
 				/>
-			</div>
-			<div>
-				<Label htmlFor="rec-driver">{intl.formatMessage({ id: "workOrder.reception.driver", defaultMessage: "Quien lo trae" })}</Label>
-				<Input id="rec-driver" value={driver} onChange={(e) => onDriver(e.target.value)} />
 			</div>
 		</div>
 	);

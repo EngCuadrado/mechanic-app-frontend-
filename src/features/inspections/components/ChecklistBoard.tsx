@@ -16,7 +16,7 @@ export default function ChecklistBoard({ groups, values, notes, setValue, setNot
 	const problem = intl.formatMessage({ id: "inspection.problem", defaultMessage: "Con problema" });
 
 	return (
-		<div className="columns-1 gap-3 md:columns-2">
+		<div className={`gap-3 ${groups.length > 1 ? "columns-1 md:columns-2" : ""}`}>
 			{groups.map((g, gi) => (
 				<section key={g.category?.name ?? gi} className="mb-3 break-inside-avoid rounded-2xl border border-gray-200 p-3 dark:border-gray-800">
 					<h2 className="mb-1 px-1 text-sm font-semibold text-gray-800 dark:text-white/90">{g.category?.name}</h2>

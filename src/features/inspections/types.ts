@@ -4,6 +4,8 @@ export interface ChecklistItem {
 	inputType: string;
 	options: string[] | null;
 	isRequired: boolean;
+	/** Inactivo = ya no se pide; solo aparece al ver una inspección vieja que lo contestó. */
+	isActive?: boolean;
 }
 
 export interface FormItem {

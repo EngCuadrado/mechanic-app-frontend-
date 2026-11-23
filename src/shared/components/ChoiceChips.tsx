@@ -2,23 +2,25 @@ import { CheckIcon } from "@heroicons/react/24/solid";
 
 interface Props {
 	options: { value: string; label: string }[];
-	value: string | null;
+	/** Un valor (elegir uno) o una lista (elegir varios: cada toque prende o apaga esa opción; quien usa el componente la alterna). */
+	value: string | null | readonly string[];
 	onChange: (value: string) => void;
 	ariaLabel: string;
 	disabled?: boolean;
 }
 
-/** Elegir una opción tocando un botón grande (sin escribir). El elegido lleva color y un check, no solo color. */
+/** Elegir tocando botones grandes (sin escribir). El elegido lleva color y un check, no solo color. */
 export default function ChoiceChips({ options, value, onChange, ariaLabel, disabled }: Props) {
+	const multiple = Array.isArray(value);
 	return (
-		<div className="flex flex-wrap gap-2" role="radiogroup" aria-label={ariaLabel}>
+		<div className="flex flex-wrap gap-2" role={multiple ? "group" : "radiogroup"} aria-label={ariaLabel}>
 			{options.map((o) => {
-				const on = value === o.value;
+				const on = multiple ? value.includes(o.value) : value === o.value;
 				return (
 					<button
 						key={o.value}
 						type="button"
-						role="radio"
+						role={multiple ? "checkbox" : "radio"}
 						aria-checked={on}
 						disabled={disabled}
 						onClick={() => onChange(o.value)}

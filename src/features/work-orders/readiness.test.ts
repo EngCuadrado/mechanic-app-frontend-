@@ -11,11 +11,12 @@ it("otros estados no se marcan", () => {
 	expect(isReceptionIncomplete({ currentStatus: "En proceso", dropoffSignatureUrl: null })).toBe(false);
 });
 
-import { orderTypeForReason } from "./constants";
-it("el tipo de orden sale del motivo", () => {
-	expect(orderTypeForReason("preventive")).toBe("Preventivo");
-	expect(orderTypeForReason("collision")).toBe("Choque");
-	expect(orderTypeForReason("brakes")).toBe("Correctivo");
+import { orderTypeForServices } from "./constants";
+it("el tipo de orden sale de los servicios", () => {
+	expect(orderTypeForServices(["oilChange", "filters"])).toBe("Preventivo");
+	expect(orderTypeForServices(["oilChange", "brakes"])).toBe("Correctivo");
+	expect(orderTypeForServices(["brakes", "paint"])).toBe("Choque");
+	expect(orderTypeForServices([])).toBe("Correctivo");
 });
 
 it("orderPath retoma la recepción incompleta y si no abre el detalle", () => {

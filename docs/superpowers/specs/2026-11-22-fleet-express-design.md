@@ -129,6 +129,14 @@ categoría por paso (`ChecklistStep`/`ChecklistFlow`) cuando nada los use.
    - "Entregadas hoy" abre el historial ya filtrado en Entregado.
    - Sidebar colapsado por defecto por debajo de 1536 px; márgenes del layout más chicos en tablet.
    - El aviso de stock bajo en el tablero queda para la fase 4 (con la flotilla).
+3b. ✅ **Simplificación (K.I.S.S.), decisión del usuario del 2026-11-22:** "lo que hay que mantener sí o sí son las fotos, las firmas y lo
+   que se le va a hacer". Esto reemplaza lo dicho arriba sobre el km y el checklist completo:
+   - Recibir = **2 pasos**: (1) placa, servicios en chips (el tipo de orden se deduce de ellos), fotos y revisión básica en una
+     pantalla, sin guardar nada hasta "Siguiente"; (2) nombre y firma de quien lo trae. Entregar = fotos + revisión básica → firma.
+   - **Sin kilometraje.**
+   - **Revisión básica de 4 ítems**: combustible (chips), llanta de repuesto con gata y herramientas, tablero sin luces de alerta,
+     documentos. El resto del checklist queda inactivo (dato de la base: `mechanic-app-backend/docs/sql-basic-checklist.sql`).
+   - Los servicios elegidos al recibir se crean con precio 0; el precio y el mecánico se completan en la orden.
 4. **Flotilla y ficha del carro** con historial, fotos comparadas y repuestos usados.
 
 ## Riesgos

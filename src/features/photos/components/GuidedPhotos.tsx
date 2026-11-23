@@ -2,11 +2,10 @@ import { useRef } from "react";
 import { useIntl } from "react-intl";
 import { ArrowPathIcon, CameraIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { angleMessageId, EXTRA_ANGLE, PHOTO_ANGLES, REQUIRED_ANGLES } from "../angles";
-import type { AnglePhotos } from "../hooks/useAnglePhotos";
-import type { OrderPhoto } from "../types";
+import type { AnglePhotosView, OrderPhoto } from "../types";
 
 interface Props {
-	photos: AnglePhotos;
+	photos: AnglePhotosView;
 	/** Texto de la miniatura de comparación (ej. "Entrada"). Sin él no se compara. */
 	compareLabel?: string;
 }
@@ -36,7 +35,8 @@ export default function GuidedPhotos({ photos, compareLabel }: Props) {
 					type="button"
 					disabled={busy}
 					onClick={() => open(angle)}
-					aria-label={photo ? `${label}: ${t("photos.retake", "tomar de nuevo")}` : label}
+					// "Foto:" distingue la toma "Atrás" del botón de volver (mismo texto).
+					aria-label={`${t("photos.photo", "Foto")}: ${label}${photo ? ` (${t("photos.retake", "tomar de nuevo")})` : ""}`}
 					title={label}
 					className={`${TILE} ${
 						photo

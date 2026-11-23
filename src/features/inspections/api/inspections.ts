@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const GET_INSPECTION_FORM = gql`
-	query GetInspectionForm($id: Int) {
-		inspectionForm(vehicleInspectionId: $id) {
+	query GetInspectionForm($id: Int, $type: String) {
+		inspectionForm(vehicleInspectionId: $id, inspectionType: $type) {
 			inspection { vehicleInspectionId inspectionType mileage inspectionNotes }
 			groups {
 				category { name sortOrder }
-				items { item { itemId name inputType options isRequired } value notes }
+				items { item { itemId name inputType options isRequired isActive } value notes }
 			}
 		}
 	}
@@ -16,15 +16,6 @@ export const CREAR_INSPECCION = gql`
 	mutation CrearInspeccion($workOrderId: Int!, $inspectionType: String!, $mileage: Int, $inspectionNotes: String) {
 		crearInspeccion(workOrderId: $workOrderId, inspectionType: $inspectionType, mileage: $mileage, inspectionNotes: $inspectionNotes) {
 			vehicleInspectionId
-		}
-	}
-`;
-
-export const EDITAR_INSPECCION = gql`
-	mutation EditarInspeccion($id: Int!, $mileage: Int) {
-		editarInspeccion(vehicleInspectionId: $id, mileage: $mileage) {
-			vehicleInspectionId
-			mileage
 		}
 	}
 `;

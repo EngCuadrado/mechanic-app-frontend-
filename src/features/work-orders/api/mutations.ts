@@ -39,6 +39,12 @@ export const GUARDAR_FIRMA_RECOGE = gql`
 	}
 `;
 
+export const GUARDAR_QUIEN_ENTREGA = gql`
+	mutation GuardarQuienEntrega($workOrderId: Int!, $name: String!) {
+		actualizarOrden(workOrderId: $workOrderId, dropoffDriverName: $name) { workOrderId }
+	}
+`;
+
 export const GUARDAR_QUIEN_RECOGE = gql`
 	mutation GuardarQuienRecoge($workOrderId: Int!, $name: String!) {
 		actualizarOrden(workOrderId: $workOrderId, pickupDriverName: $name) { workOrderId }

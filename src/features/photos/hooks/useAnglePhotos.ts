@@ -4,7 +4,7 @@ import { useApiMutation } from "../../../shared/hooks/useApiMutation";
 import { shrinkImage } from "../../../shared/utils/image";
 import { GET_WORK_ORDER_PHOTOS, REGISTRAR_FOTO } from "../api/photos";
 import { extraPhotos, missingAngles, photosByAngle } from "../angles";
-import type { PhotoStageGroup } from "../types";
+import type { AnglePhotosView, PhotoStageGroup } from "../types";
 
 interface Args {
 	workOrderId: number;
@@ -16,7 +16,7 @@ interface Args {
 }
 
 /** Fotos guiadas de una etapa: qué ángulo ya tiene foto, cuáles faltan y subir una toma (reducida) por ángulo. */
-export function useAnglePhotos({ workOrderId, stage, compareStage, vehicleInspectionId }: Args) {
+export function useAnglePhotos({ workOrderId, stage, compareStage, vehicleInspectionId }: Args): AnglePhotosView {
 	const { data } = useQuery<{ workOrderPhotos: PhotoStageGroup[] }>(GET_WORK_ORDER_PHOTOS, { variables: { workOrderId } });
 	const [upload] = useApiMutation(REGISTRAR_FOTO, { refetchQueries: ["GetWorkOrderPhotos"] });
 	// Varias tomas pueden subir a la vez; cada casilla muestra la suya.
@@ -44,4 +44,3 @@ export function useAnglePhotos({ workOrderId, stage, compareStage, vehicleInspec
 	};
 }
 
-export type AnglePhotos = ReturnType<typeof useAnglePhotos>;
