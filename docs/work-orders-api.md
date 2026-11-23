@@ -46,7 +46,7 @@ Argumentos opcionales: `notes`, `dropoffDriverName`, `pickupDriverName`, `rental
 { "data": { "crearOrden": { "workOrderId": 1, "currentStatus": "Recibido", "companyId": null, "createdBy": null } } }
 ```
 `companyId` sale de la empresa que tiene el vehículo (`null` si está libre). Errores: `"El vehículo ya tiene una orden abierta."`
-(`OPEN_ORDER_EXISTS`).
+(`OPEN_ORDER_EXISTS`). Pone el vehículo en `MANTENIMIENTO` en la misma operación (2026-11-22).
 
 ### `cambiarEstadoOrden` ✅
 ```graphql
@@ -57,6 +57,15 @@ mutation { cambiarEstadoOrden(workOrderId: 2, newStatus: "Entregado") { currentS
 ```
 Al pasar a `Entregado` se llena `exitTimestamp`. Errores: `"Transición no permitida: Recibido → Listo."`,
 `"Transición no permitida: Entregado → En proceso."`.
+
+Requisitos para avanzar (2026-11-22, `WorkOrderRules.TransitionBlocker`):
+| Destino | Exige | `code` si falta |
+|---|---|---|
+| `En proceso` | inspección de `Entrada` y `dropoffSignatureUrl` | `RECEPTION_INCOMPLETE` |
+| `Listo` | al menos un servicio o repuesto | `NO_WORK` |
+| `Entregado` | inspección de `Salida` y `pickupSignatureUrl` | `DELIVERY_INCOMPLETE` |
+
+Al pasar a `Entregado`, y también con `cancelarOrden`, el vehículo vuelve a `ALQUILADO` si tiene empresa o a `DISPONIBLE` si no.
 
 ### `cancelarOrden` ✅
 ```graphql
@@ -95,8 +104,8 @@ incluido, calculada con GROUP BY. Argumentos opcionales: `entryFrom`, `entryTo` 
 La lista de órdenes lo usa para los contadores del filtro (`GetWorkOrderStatusCounts`).
 
 ### `workOrderDashboard(stalledHours: Int = 24)` ✅ (aún sin usar en la UI)
-`{ createdToday readyToDeliver stalled }`. `stalled` cuenta Recibido/En proceso con más de N horas **desde `entryTimestamp`**
-(no hay `statusChangedAt` en la base). `stalledHours <= 0` da error. "Hoy" usa `WorkOrderRules.TimeZoneId` del backend.
+`{ createdToday readyToDeliver stalled }`. `stalled` cuenta Recibido/En proceso con más de N horas
+desde `statusChangedAt` (o `entryTimestamp` si es null). `stalledHours <= 0` da error. "Hoy" usa `WorkOrderRules.TimeZoneId` del backend.
 
 ### `workOrder` (detalle) ⚠️
 ```graphql
@@ -207,6 +216,7 @@ los valores ya guardados en `value` y `notes`.
 ### `crearInspeccion` ✅
 Crea la inspección `Entrada` o `Salida` de una orden, con kilometraje, notas y URL del croquis de daños. Si ya existe una de
 ese tipo en la orden: `"La orden ya tiene una inspección de Entrada."` (`INSPECTION_EXISTS`).
+Si `mileage` es mayor que el del vehículo, actualiza `vehicles.current_mileage` (nunca lo baja) (2026-11-22).
 
 ### `editarInspeccion` ✅ · `vehicleInspection` ✅
 
@@ -251,6 +261,9 @@ Sin lógica de facturación: solo guardar y leer.
 | Orden Entregado/Cancelado | "La orden está Entregado y no admite cambios." (o "…Cancelado…") | `ORDER_CLOSED` en errores de BD |
 | Vehículo con orden abierta | "El vehículo ya tiene una orden abierta." | `OPEN_ORDER_EXISTS` |
 | Transición inválida | "Transición no permitida: A → B." | — |
+| Recepción incompleta | "Completa la recepción (inspección de entrada y firma)…" | `RECEPTION_INCOMPLETE` |
+| Orden sin trabajo | "Agrega al menos un servicio o repuesto…" | `NO_WORK` |
+| Entrega incompleta | "Completa la entrega (inspección de salida y firma de quien recoge)…" | `DELIVERY_INCOMPLETE` |
 | Inspección duplicada | "La orden ya tiene una inspección de Entrada." | `INSPECTION_EXISTS` |
 | Resultado duplicado | "Ya existe un resultado para ese ítem en la inspección." | `RESULT_EXISTS` |
 | Movimiento editado/borrado | "Los movimientos de inventario son inmutables; corrija con un movimiento de Ajuste." | — |
@@ -260,11 +273,9 @@ Sin lógica de facturación: solo guardar y leer.
 ## Pendientes conocidos
 - **Sin `[Authorize]`:** las mutations no exigen sesión. Cualquiera con la URL del backend puede crear órdenes, mover stock o
   registrar compras. Conviene exigir login antes de producción.
-- **Horas:** `crearOrden` y `cambiarEstadoOrden` ahora escriben `entryTimestamp`/`exitTimestamp` en `America/Panama` (UTC-5,
-  constante del backend, suposición); el taller está en Managua (UTC-6) y `parseServerDate` trata las fechas sin zona como UTC.
-  Mientras no se unifique (idealmente fechas con zona o `America/Managua`), la antigüedad ("hace 3 h") y las horas mostradas
-  pueden desfasarse. Solo debe cambiar `shared/utils/dates.ts`.
-- **Sin `statusChangedAt`:** no existe la fecha del último cambio de estado; "atrasadas" se mide desde la entrada.
+- **Horas:** `crearOrden` y `cambiarEstadoOrden` escriben `entryTimestamp`/`exitTimestamp`/`statusChangedAt` en hora local de
+  `America/Managua` (UTC-6) **sin zona**, y `parseServerDate` trata las fechas sin zona como UTC. Mientras no se unifique,
+  la antigüedad ("hace 3 h") y las horas mostradas pueden desfasarse. Solo debe cambiar `shared/utils/dates.ts`.
 - **Detalles de error en producción:** hoy `extensions` incluye el `stackTrace`. En producción debe desactivarse.
 - **Nulabilidad:** los modelos del backend marcaban `chassisNumber` como obligatorio aunque la columna acepta `NULL`
   (`crearOrden` falló con un vehículo sin chasis). Se pidió corregir en todos los modelos; confirmar que se hizo.

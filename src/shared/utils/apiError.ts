@@ -12,6 +12,9 @@ const CODE_MESSAGE_IDS: Record<string, string> = {
 	OPEN_ORDER_EXISTS: "api.error.openOrderExists",
 	INSPECTION_EXISTS: "api.error.inspectionExists",
 	RESULT_EXISTS: "api.error.resultExists",
+	RECEPTION_INCOMPLETE: "api.error.receptionIncomplete",
+	NO_WORK: "api.error.noWork",
+	DELIVERY_INCOMPLETE: "api.error.deliveryIncomplete",
 };
 
 /** Extrae mensaje y código de un error de Apollo o de un arreglo `errors` de GraphQL. */
