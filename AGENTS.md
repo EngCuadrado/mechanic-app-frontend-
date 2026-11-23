@@ -110,9 +110,9 @@ pantalla táctil; vertical, celular y escritorio deben funcionar, pero se adapta
 - Los totales de una orden los calcula el backend; la UI los muestra, no los recalcula.
 
 ## 10. Fechas
-Toda la lógica de fechas pasa por `shared/utils/` (una sola función para parsear y formatear). Hoy el backend mezcla fechas
-UTC y hora local del servidor (ver "Pendientes" en `docs/work-orders-api.md`). Ese conocimiento se queda en esa función;
-ningún componente hace `new Date(texto)` por su cuenta.
+Toda la lógica de fechas pasa por `shared/utils/dates.ts` (una sola función para parsear y formatear). El backend guarda y
+devuelve todo en UTC; para mostrar se pasa a la hora del taller (`America/Managua`). Los filtros por día usan `dayStartUtc` /
+`dayEndUtc`. Ningún componente hace `new Date(texto)` por su cuenta.
 
 ## 11. Cómo trabajar un cambio
 1. Lee el docs de API y esta guía; busca algo parecido ya hecho.

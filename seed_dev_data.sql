@@ -3,7 +3,7 @@
    - Todo o nada (transacción + XACT_ABORT).
    - El stock entra como movimientos 'Inicial'/'Compra' y los repuestos de las órdenes se insertan con la orden abierta,
      así los triggers generan 'Uso'/'Devolucion' igual que la app. Nunca se escribe stock_quantity.
-   - Las horas de las órdenes van en hora de Managua (UTC-6), como WorkOrderRules.Now() del backend.
+   - Todas las horas van en UTC, como WorkOrderRules.Now() del backend y GETDATE() de la base.
    Nombres, empresas, placas y teléfonos son ficticios. */
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
@@ -18,7 +18,7 @@ IF NOT EXISTS (SELECT 1 FROM inspection_checklist_items)
 BEGIN RAISERROR(N'Falta el checklist (inspection_checklist_items).', 16, 1); RETURN; END;
 
 DECLARE @user int = (SELECT MIN(user_id) FROM users);
-DECLARE @now datetime = DATEADD(HOUR, -6, SYSUTCDATETIME()); -- Managua
+DECLARE @now datetime = SYSUTCDATETIME(); -- UTC
 DECLARE @sig nvarchar(255) = N'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' viewBox=''0 0 300 100''><path d=''M20 70 C60 20 80 90 120 50 S190 30 220 60 S270 40 285 55'' fill=''none'' stroke=''%23222'' stroke-width=''4''/></svg>';
 
 BEGIN TRAN;

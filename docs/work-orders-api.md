@@ -11,9 +11,10 @@ inventario con movimientos, inspecciones y fotos.
 ## Convenciones
 - Paginación por cursor: `first`, `after` → `nodes { … } pageInfo { hasNextPage endCursor }`.
 - Los errores llegan en `errors[0].message`; los errores de SQL traducidos llevan además `extensions.code`.
-- **Fechas:** hoy las fechas de las órdenes salen en UTC, pero otras (movimientos, inspecciones, fotos) usan la hora
-  local del servidor (8 h atrás de UTC), y algunas salen sin `Z`. Es un problema conocido y aplazado; no
-  mezcles horas de tablas distintas sin tenerlo en cuenta (ver "Pendientes conocidos").
+- **Fechas (2026-11-22):** todo se guarda y se devuelve en **UTC** (con `Z`): órdenes, inspecciones, fotos, movimientos,
+  alquileres y facturas, igual que `GETDATE()` de la base. La zona del taller (`America/Managua`) solo decide qué es "hoy"
+  (`WorkOrderRules.TodayStartUtc`) y cómo se muestran las horas (`shared/utils/dates.ts`). Filas anteriores a este cambio
+  en producción pueden estar en hora de Managua: ver `mechanic-app-backend/docs/sql-utc-dates.sql`.
 - `createdBy` queda `null` si la petición no trae token JWT.
 
 ## Estados y tipos
@@ -275,9 +276,8 @@ Sin lógica de facturación: solo guardar y leer.
 ## Pendientes conocidos
 - **Sin `[Authorize]`:** las mutations no exigen sesión. Cualquiera con la URL del backend puede crear órdenes, mover stock o
   registrar compras. Conviene exigir login antes de producción.
-- **Horas:** `crearOrden` y `cambiarEstadoOrden` escriben `entryTimestamp`/`exitTimestamp`/`statusChangedAt` en hora local de
-  `America/Managua` (UTC-6) **sin zona**, y `parseServerDate` trata las fechas sin zona como UTC. Mientras no se unifique,
-  la antigüedad ("hace 3 h") y las horas mostradas pueden desfasarse. Solo debe cambiar `shared/utils/dates.ts`.
+- **Horas en producción:** antes del 2026-11-22 el backend guardaba las horas de las órdenes en hora de Managua. Si producción
+  tiene órdenes de esa época, corregirlas con `mechanic-app-backend/docs/sql-utc-dates.sql` (lo ejecuta el dueño de la base).
 - **Detalles de error en producción:** hoy `extensions` incluye el `stackTrace`. En producción debe desactivarse.
 - **Nulabilidad:** los modelos del backend marcaban `chassisNumber` como obligatorio aunque la columna acepta `NULL`
   (`crearOrden` falló con un vehículo sin chasis). Se pidió corregir en todos los modelos; confirmar que se hizo.

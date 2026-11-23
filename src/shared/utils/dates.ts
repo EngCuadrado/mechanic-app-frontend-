@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import { nicaDate } from "../../utils/dateUtils";
 
 // ÚNICO lugar que conoce cómo llegan las fechas del backend.
-// Hoy: un texto sin zona ("2026-11-05T09:14:00") se trata como UTC. Si el backend unifica sus horas
-// (ver docs/work-orders-api.md, "Pendientes conocidos"), solo se cambia esta función.
+// El backend guarda y devuelve todo en UTC (con "Z"); por si algún texto llega sin zona, también se trata como UTC.
+// Para mostrar, todo se pasa a la hora del taller (America/Managua) con nicaDate.
 export function parseServerDate(value?: string | null): dayjs.Dayjs | null {
 	if (!value) return null;
 	const hasZone = /([zZ]|[+-]\d{2}:?\d{2})$/.test(value);
