@@ -47,6 +47,7 @@ export default function ReceptionPage() {
 				existingId={order?.inspections.find((i) => i.inspectionType === "Entrada")?.vehicleInspectionId ?? null}
 				photoStage="Antes"
 				stepOffset={resumeId === null ? 1 : 0}
+				lastMileage={vehicle?.currentMilage ?? order?.vehicle?.currentMilage ?? null}
 				signTitle={intl.formatMessage({ id: "workOrder.reception.sign", defaultMessage: "Firma del cliente" })}
 				finishLabel={intl.formatMessage({ id: "workOrder.reception.receive", defaultMessage: "Recibir vehículo" })}
 				onExit={exit}

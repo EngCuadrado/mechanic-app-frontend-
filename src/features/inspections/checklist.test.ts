@@ -1,6 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { allRequiredDone, isAnswered, missingRequired } from "./checklist";
+import { allRequiredDone, isAnswered, isValidMileage, missingRequired } from "./checklist";
 import type { FormGroup } from "./types";
+
+describe("isValidMileage", () => {
+	it("acepta igual o mayor que el último", () => {
+		expect(isValidMileage(39400, 39400)).toBe(true);
+		expect(isValidMileage(39500, 39400)).toBe(true);
+	});
+	it("rechaza menor que el último", () => expect(isValidMileage(39000, 39400)).toBe(false));
+	it("rechaza vacío, decimal o negativo", () => {
+		expect(isValidMileage(null, null)).toBe(false);
+		expect(isValidMileage(12.5, null)).toBe(false);
+		expect(isValidMileage(-1, null)).toBe(false);
+	});
+	it("sin lectura previa basta con un entero", () => expect(isValidMileage(0, null)).toBe(true));
+});
 
 const item = (itemId: number, isRequired: boolean, inputType = "radio") => ({
 	item: { itemId, name: `i${itemId}`, inputType, options: ["a"], isRequired },

@@ -22,6 +22,7 @@ function CheckboxField({ item, value, onChange, disabled }: FieldProps) {
 	const on = value === "true";
 	return (
 		<button
+			id={`item-${item.itemId}`}
 			type="button"
 			role="switch"
 			aria-checked={on}

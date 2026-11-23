@@ -31,6 +31,7 @@ export default function DeliveryPage() {
 			existingId={order.inspections.find((i) => i.inspectionType === "Salida")?.vehicleInspectionId ?? null}
 			photoStage="Despues"
 			stepOffset={0}
+			lastMileage={order.vehicle?.currentMilage ?? null}
 			signTitle={intl.formatMessage({ id: "workOrder.delivery.sign", defaultMessage: "Firma de quien recoge" })}
 			finishLabel={intl.formatMessage({ id: "workOrder.delivery.deliver", defaultMessage: "Entregar vehículo" })}
 			askName={{ label: intl.formatMessage({ id: "workOrder.delivery.pickup", defaultMessage: "Quien lo recoge" }), initial: order.pickupDriverName ?? "" }}

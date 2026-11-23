@@ -14,15 +14,17 @@ interface Props {
 	onNext: () => void;
 	nextDisabled?: boolean;
 	loading?: boolean;
+	/** Usa todo el ancho en tablet horizontal (pasos con dos columnas). */
+	wide?: boolean;
 	children: ReactNode;
 }
 
-/** Pantalla de un paso: título, progreso, contenido y una sola acción principal abajo. */
-export default function StepFlow({ title, step, total, onBack, nextLabel, onNext, nextDisabled, loading, children }: Props) {
+/** Pantalla de un paso: título, progreso, contenido y una sola acción principal abajo (a la derecha en tablet). */
+export default function StepFlow({ title, step, total, onBack, nextLabel, onNext, nextDisabled, loading, wide, children }: Props) {
 	const intl = useIntl();
 	const back = intl.formatMessage({ id: "common.back", defaultMessage: "Atrás" });
 	return (
-		<div className="mx-auto flex max-w-3xl flex-col gap-4 p-4">
+		<div className={`mx-auto flex flex-col gap-4 p-4 ${wide ? "max-w-3xl lg:max-w-none" : "max-w-3xl"}`}>
 			<div className="flex items-center gap-3">
 				{onBack && <IconButton icon={<ArrowLeftIcon />} label={back} onClick={onBack} />}
 				<div className="min-w-0 flex-1">
@@ -39,7 +41,7 @@ export default function StepFlow({ title, step, total, onBack, nextLabel, onNext
 				<IconButton
 					variant="primary"
 					showLabel
-					className="flex-1"
+					className="flex-1 lg:ml-auto lg:max-w-sm"
 					disabled={nextDisabled || loading}
 					icon={<ArrowRightIcon />}
 					label={nextLabel}

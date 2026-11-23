@@ -219,6 +219,8 @@ ese tipo en la orden: `"La orden ya tiene una inspección de Entrada."` (`INSPEC
 Si `mileage` es mayor que el del vehículo, actualiza `vehicles.current_mileage` (nunca lo baja) (2026-11-22).
 
 ### `editarInspeccion` ✅ · `vehicleInspection` ✅
+`editarInspeccion(vehicleInspectionId, mileage)` también sube `vehicles.current_mileage` si el km es mayor (2026-11-22). La recepción y
+la entrega exprés guardan el km así, al terminar la revisión.
 
 ### `guardarResultadosInspeccion` ✅
 ```graphql

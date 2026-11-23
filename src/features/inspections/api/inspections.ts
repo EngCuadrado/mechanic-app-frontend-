@@ -20,6 +20,15 @@ export const CREAR_INSPECCION = gql`
 	}
 `;
 
+export const EDITAR_INSPECCION = gql`
+	mutation EditarInspeccion($id: Int!, $mileage: Int) {
+		editarInspeccion(vehicleInspectionId: $id, mileage: $mileage) {
+			vehicleInspectionId
+			mileage
+		}
+	}
+`;
+
 export const GUARDAR_RESULTADOS = gql`
 	mutation GuardarResultadosInspeccion($id: Int!, $results: [InspectionResultInput!]!, $validar: Boolean) {
 		guardarResultadosInspeccion(vehicleInspectionId: $id, results: $results, validarCompletitud: $validar) {

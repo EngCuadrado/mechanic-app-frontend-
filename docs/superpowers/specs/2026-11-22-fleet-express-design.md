@@ -115,8 +115,13 @@ Eliminar: `usePartsDraft` (guardado con retraso), el botón "Pasar a…" de `Boa
 categoría por paso (`ChecklistStep`/`ChecklistFlow`) cuando nada los use.
 
 ## Fases (cada una se puede liberar sola)
-1. **Backend:** estado del vehículo automático, bloqueos de avance, km, tests.
-2. **Recepción y entrega exprés:** `GuidedPhotos` + `ChecklistBoard` + km.
+1. ✅ **Backend:** estado del vehículo automático, bloqueos de avance, km, tests.
+2. ✅ **Recepción y entrega exprés:** `GuidedPhotos` + `ChecklistBoard` + km. Lo que cambió al implementarla:
+   - La entrega quedó en **2 pasos** (revisión → firma con el nombre de quien recoge), no 3: el nombre va junto a la firma.
+   - El km se escribe siempre (no se prellena) y no puede ser menor que el último del carro; se guarda con `editarInspeccion`.
+   - Sin botón "Todo bien" por categoría: con los sí/no empezando en "bien" no hace falta.
+   - En la entrega, una casilla sin foto muestra de fondo la foto de entrada del mismo ángulo como guía.
+   - Las fotos del seed usan las claves de ángulo (`front`…); las tomas por ítem del checklist se quitaron.
 3. **Tablero y detalle en tablet:** 3 columnas, tarjeta compacta, dos paneles, cancelar en menú, repuestos al momento.
 4. **Flotilla y ficha del carro** con historial, fotos comparadas y repuestos usados.
 

@@ -12,7 +12,7 @@ interface TextareaProps {
 }
 
 const TextArea: React.FC<TextareaProps> = ({
-	placeholder = "Enter your message", // Default placeholder
+	placeholder = "", // Sin texto fijo en inglés: quien lo use pasa uno traducido si hace falta
 	rows = 3, // Default number of rows
 	value = "", // Default value
 	onChange, // Callback for changes

@@ -274,20 +274,23 @@ CROSS JOIN inspection_checklist_items it
 LEFT JOIN #fail f ON f.ok = o.k AND f.item = it.item_id AND i.inspection_type = N'Entrada'
 WHERE it.input_type <> N'textarea' OR f.item IS NOT NULL;
 
-/* ---------- Fotos (URLs de ejemplo) ---------- */
+/* ---------- Fotos (URLs de ejemplo) ----------
+   category = ángulo de la toma guiada (features/photos/angles.ts): front, back, left, right, dash; extra = foto libre. */
 INSERT work_order_photos (work_order_id, vehicle_inspection_id, stage, photo_url, category, uploaded_at)
 SELECT i.work_order_id, i.vehicle_inspection_id, N'Antes',
-       CONCAT(N'https://picsum.photos/seed/wo', i.work_order_id, N'-', c.n, N'/800/600'), c.cat, DATEADD(MINUTE, 12, DATEADD(HOUR, -o.hrs, @now))
+       CONCAT(N'https://picsum.photos/seed/wo', i.work_order_id, N'-', c.cat, N'/800/600'), c.cat, DATEADD(MINUTE, 12, DATEADD(HOUR, -o.hrs, @now))
 FROM vehicle_inspections i JOIN #o o ON o.id = i.work_order_id
-CROSS JOIN (VALUES (1, N'Frente'), (2, N'Lateral izquierdo')) c(n, cat)
+CROSS JOIN (VALUES (N'front'), (N'back'), (N'left'), (N'right'), (N'dash')) c(cat)
 WHERE i.inspection_type = N'Entrada';
 INSERT work_order_photos (work_order_id, vehicle_inspection_id, stage, photo_url, category, uploaded_at)
-SELECT o.id, NULL, N'Antes', CONCAT(N'https://picsum.photos/seed/wo', o.id, N'-dano/800/600'), N'Daño', DATEADD(MINUTE, 14, DATEADD(HOUR, -o.hrs, @now))
+SELECT o.id, NULL, N'Antes', CONCAT(N'https://picsum.photos/seed/wo', o.id, N'-dano/800/600'), N'extra', DATEADD(MINUTE, 14, DATEADD(HOUR, -o.hrs, @now))
 FROM #o o WHERE o.type = N'Choque';
 INSERT work_order_photos (work_order_id, vehicle_inspection_id, stage, photo_url, category, uploaded_at)
 SELECT i.work_order_id, i.vehicle_inspection_id, N'Despues',
-       CONCAT(N'https://picsum.photos/seed/wo', i.work_order_id, N'-fin/800/600'), N'Frente', i.created_at
-FROM vehicle_inspections i WHERE i.inspection_type = N'Salida';
+       CONCAT(N'https://picsum.photos/seed/wo', i.work_order_id, N'-fin-', c.cat, N'/800/600'), c.cat, i.created_at
+FROM vehicle_inspections i
+CROSS JOIN (VALUES (N'front'), (N'back'), (N'left'), (N'right')) c(cat)
+WHERE i.inspection_type = N'Salida';
 
 COMMIT;
 

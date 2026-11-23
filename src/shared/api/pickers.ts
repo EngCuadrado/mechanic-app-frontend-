@@ -9,6 +9,7 @@ export const SEARCH_VEHICLES = gql`
 				vehicleId
 				plate
 				companyId
+				currentMilage
 				model { modelName brand { brandName } }
 				company { name }
 			}

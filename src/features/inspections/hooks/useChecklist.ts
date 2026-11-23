@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@apollo/client/react";
 import { useApiMutation } from "../../../shared/hooks/useApiMutation";
-import { CREAR_INSPECCION, GET_INSPECTION_FORM, GUARDAR_RESULTADOS } from "../api/inspections";
+import { CREAR_INSPECCION, EDITAR_INSPECCION, GET_INSPECTION_FORM, GUARDAR_RESULTADOS } from "../api/inspections";
 import { isAnswered } from "../checklist";
 import type { FormGroup, InspectionFormData } from "../types";
 
@@ -15,8 +15,8 @@ interface Args {
 const EMPTY: FormGroup[] = [];
 
 /**
- * Checklist de una inspección: la crea (una sola vez) si no existe, carga las categorías del backend y guarda por categoría.
- * Un switch (checkbox) empieza en "false"; el resto de ítems empieza sin respuesta.
+ * Checklist de una inspección: la crea (una sola vez) si no existe, carga las categorías del backend y guarda todo junto al final.
+ * Por excepción: un switch (checkbox) empieza en "true" (bien) y solo se tocan los que tienen problema; el resto empieza sin respuesta.
  */
 export function useChecklist({ workOrderId, type, existingId = null }: Args) {
 	const [inspectionId, setInspectionId] = useState<number | null>(existingId);
@@ -27,6 +27,7 @@ export function useChecklist({ workOrderId, type, existingId = null }: Args) {
 	const initialized = useRef<number | null>(null);
 	const [create] = useApiMutation<{ crearInspeccion: { vehicleInspectionId: number } }>(CREAR_INSPECCION);
 	const [save, saving] = useApiMutation(GUARDAR_RESULTADOS);
+	const [edit, editing] = useApiMutation(EDITAR_INSPECCION);
 
 	useEffect(() => {
 		if (inspectionId !== null || creating.current) return;
@@ -51,7 +52,7 @@ export function useChecklist({ workOrderId, type, existingId = null }: Args) {
 		const n: Record<number, string> = {};
 		groups.forEach((g) =>
 			g.items.forEach(({ item, value, notes: note }) => {
-				v[item.itemId] = value ?? (item.inputType === "checkbox" ? "false" : "");
+				v[item.itemId] = value ?? (item.inputType === "checkbox" ? "true" : "");
 				if (note) n[item.itemId] = note;
 			}),
 		);
@@ -62,30 +63,30 @@ export function useChecklist({ workOrderId, type, existingId = null }: Args) {
 	const setValue = useCallback((itemId: number, v: string) => setValues((p) => ({ ...p, [itemId]: v })), []);
 	const setNote = useCallback((itemId: number, v: string) => setNotes((p) => ({ ...p, [itemId]: v })), []);
 
-	const saveGroup = async (index: number, validar = false) => {
-		const group = groups[index];
-		if (!group || inspectionId === null) return true;
-		const results = group.items
+	/** Guarda el km y todas las respuestas en un lote; el backend valida que no falte ningún obligatorio. */
+	const finish = async (mileage: number | null) => {
+		if (inspectionId === null) return false;
+		if (mileage !== null && !(await edit({ id: inspectionId, mileage }))) return false;
+		if (groups.length === 0) return true;
+		const results = groups
+			.flatMap((g) => g.items)
 			.filter(({ item }) => isAnswered(values[item.itemId]))
 			.map(({ item }) => ({ itemId: item.itemId, value: values[item.itemId], notes: notes[item.itemId]?.trim() || null }));
-		if (results.length === 0 && !validar) return true;
-		return Boolean(await save({ id: inspectionId, results, validar }));
+		return Boolean(await save({ id: inspectionId, results, validar: true }));
 	};
-
-	/** Guarda la última categoría y pide al backend validar que no falte ningún obligatorio. */
-	const finish = () => (groups.length === 0 ? Promise.resolve(true) : saveGroup(groups.length - 1, true));
 
 	return {
 		inspectionId,
 		groups,
 		values,
 		notes,
+		/** Km ya guardado en esta inspección (al retomarla). */
+		mileage: data?.inspectionForm.inspection?.mileage ?? null,
 		loading: loading || (inspectionId === null && !failed),
 		error: failed || Boolean(error),
-		saving,
+		saving: saving || editing,
 		setValue,
 		setNote,
-		saveGroup,
 		finish,
 	};
 }

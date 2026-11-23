@@ -10,6 +10,7 @@ import { ORDER_REASONS, reasonMessageId } from "../constants";
 export interface PickedVehicle {
 	vehicleId: number;
 	plate: string | null;
+	currentMilage?: number | null;
 	model?: { modelName: string; brand?: { brandName: string } | null } | null;
 }
 
