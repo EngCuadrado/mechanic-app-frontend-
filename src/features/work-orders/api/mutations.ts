@@ -25,28 +25,23 @@ export const CREAR_ORDEN = gql`
 	}
 `;
 
-// Los argumentos Optional del backend: lo que no se envía no cambia; null lo borra.
-export const ACTUALIZAR_ORDEN = gql`
-	mutation ActualizarOrden(
-		$workOrderId: Int!
-		$reportedIssue: String
-		$notes: String
-		$dropoffDriverName: String
-		$pickupDriverName: String
-		$dropoffSignatureUrl: String
-		$pickupSignatureUrl: String
-	) {
-		actualizarOrden(
-			workOrderId: $workOrderId
-			reportedIssue: $reportedIssue
-			notes: $notes
-			dropoffDriverName: $dropoffDriverName
-			pickupDriverName: $pickupDriverName
-			dropoffSignatureUrl: $dropoffSignatureUrl
-			pickupSignatureUrl: $pickupSignatureUrl
-		) {
-			workOrderId
-		}
+// actualizarOrden: un documento por dato. HotChocolate toma como null una variable declarada que no se envía, y en
+// actualizarOrden null BORRA el campo: un documento con todas las variables borraba las firmas al guardar el nombre.
+export const GUARDAR_FIRMA_ENTREGA = gql`
+	mutation GuardarFirmaEntrega($workOrderId: Int!, $url: String!) {
+		actualizarOrden(workOrderId: $workOrderId, dropoffSignatureUrl: $url) { workOrderId }
+	}
+`;
+
+export const GUARDAR_FIRMA_RECOGE = gql`
+	mutation GuardarFirmaRecoge($workOrderId: Int!, $url: String!) {
+		actualizarOrden(workOrderId: $workOrderId, pickupSignatureUrl: $url) { workOrderId }
+	}
+`;
+
+export const GUARDAR_QUIEN_RECOGE = gql`
+	mutation GuardarQuienRecoge($workOrderId: Int!, $name: String!) {
+		actualizarOrden(workOrderId: $workOrderId, pickupDriverName: $name) { workOrderId }
 	}
 `;
 

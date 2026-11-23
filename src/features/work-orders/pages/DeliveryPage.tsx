@@ -3,7 +3,7 @@ import { useIntl } from "react-intl";
 import Loading from "../../../components/ui/loading/Loading";
 import EmptyState from "../../../shared/components/EmptyState";
 import { useApiMutation } from "../../../shared/hooks/useApiMutation";
-import { ACTUALIZAR_ORDEN, CAMBIAR_ESTADO_ORDEN } from "../api/mutations";
+import { CAMBIAR_ESTADO_ORDEN, GUARDAR_QUIEN_RECOGE } from "../api/mutations";
 import ChecklistFlow from "../components/ChecklistFlow";
 import { useSignOrder } from "../hooks/useSignOrder";
 import { useWorkOrder } from "../hooks/useWorkOrder";
@@ -17,7 +17,7 @@ export default function DeliveryPage() {
 	const id = Number(useParams().id);
 	const { order, loading } = useWorkOrder(id);
 	const { sign, signing } = useSignOrder("pickup");
-	const [update] = useApiMutation(ACTUALIZAR_ORDEN);
+	const [saveName] = useApiMutation(GUARDAR_QUIEN_RECOGE);
 	const [change] = useApiMutation(CAMBIAR_ESTADO_ORDEN, REFETCH);
 
 	if (loading && !order) return <Loading />;
@@ -39,7 +39,7 @@ export default function DeliveryPage() {
 			onSign={(file) => sign(id, file)}
 			signing={signing}
 			onFinished={async (name) => {
-				if (!(await update({ workOrderId: id, pickupDriverName: name }))) return;
+				if (!(await saveName({ workOrderId: id, name }))) return;
 				if (await change({ workOrderId: id, newStatus: "Entregado" })) navigate("/ordenes");
 			}}
 		/>
